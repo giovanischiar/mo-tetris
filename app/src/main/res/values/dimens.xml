@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="blockSize">20dp</dimen>
+    <dimen name="screenWidth">200dp</dimen>
+    <dimen name="screenHeight">300dp</dimen>
+    <dimen name="strokeWidth">3dp</dimen>
+</resources>
