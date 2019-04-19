@@ -133,6 +133,10 @@ class TetraminoViewModel {
         createBlocks(blockSize, 0, initialLeftMargin, tetramino.type)
     }
 
+    fun nextType(): Char {
+        return tetraminoFetcher.next()
+    }
+
     private fun createBlocks(blockSize: Int, topMargin: Int, leftMargin: Int, type: Char) {
         val newBlockList = initializeBlocks(topMargin, leftMargin, blockSize)
         val newBlocks = when (type) {

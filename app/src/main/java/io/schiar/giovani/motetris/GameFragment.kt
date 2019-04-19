@@ -61,6 +61,19 @@ class GameFragment : Fragment() {
         }
     }
 
+    fun addNext(type: Char) {
+        val tetraminoView = when(type) {
+            'i' -> layoutInflater.inflate(R.layout.tetramino_i, null)
+            'l' -> layoutInflater.inflate(R.layout.tetramino_l, null)
+            'o' -> layoutInflater.inflate(R.layout.tetramino_o, null)
+            's' -> layoutInflater.inflate(R.layout.tetramino_s, null)
+            't' -> layoutInflater.inflate(R.layout.tetramino_t, null)
+            else -> return
+        }
+
+        next.addView(tetraminoView)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         step = ceil(resources.getDimension(R.dimen.blockSize)).toInt()
@@ -81,7 +94,14 @@ class GameFragment : Fragment() {
             score.text = it.toString()
         })
 
+        viewModel.nextType.observe(this, Observer {
+            next.removeAllViews()
+            addNext(it)
+        })
+
         viewModel.currentTetraminoViewModel.observe(this, Observer {tetraminoViewModel ->
+
+            viewModel.nextType.postValue(tetraminoViewModel.nextType())
 
             tetraminoViewModel.blocks.observe(this, Observer {blocks ->
                 createTetramino(blocks)

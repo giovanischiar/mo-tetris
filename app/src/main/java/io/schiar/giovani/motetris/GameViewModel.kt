@@ -4,6 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel;
 
 class GameViewModel : ViewModel() {
+    val nextType: MutableLiveData<Char> by lazy {
+        MutableLiveData<Char>()
+    }
+
     val score: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
     }
@@ -12,11 +16,10 @@ class GameViewModel : ViewModel() {
         MutableLiveData<TetraminoViewModel>()
     }
 
-    fun nextTetramino(blockSize: Int, initialLeftMargin: Int) {
-        val nextTetraminoViewModel = TetraminoViewModel().apply {
+    fun initTetramino(blockSize: Int, initialLeftMargin: Int) {
+        currentTetraminoViewModel.value = TetraminoViewModel().apply {
             this.nextTetramino(blockSize, initialLeftMargin)
         }
-        currentTetraminoViewModel.value = nextTetraminoViewModel
     }
 
     fun updateScore() {
