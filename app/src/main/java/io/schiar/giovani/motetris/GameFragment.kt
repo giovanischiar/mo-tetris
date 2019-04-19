@@ -24,6 +24,11 @@ class GameFragment : Fragment() {
 
     companion object {
         fun newInstance() = GameFragment()
+    fun onDeviceShake() {
+        if (gravityLife.childCount > 0) {
+            gravityLife.removeView(gravityLife.children.last())
+            updateBlockPositionsThread(listOf(), true)
+        }
     }
 
     private lateinit var viewModel: GameViewModel
@@ -206,22 +211,39 @@ class GameFragment : Fragment() {
         return false
     }
 
-    private fun updateBlockPositions(): Boolean {
+    private fun updateBlockPositions(lineTopMargin: List<Int>, specialBlockUpdate: Boolean): Boolean {
         var hasUpdated = false
-        for (block in canvas.children) {
-            if (tetramino.contains(block)) {
-                continue
-            }
+        if (specialBlockUpdate) {
+            for (block in canvas.children) {
+                if (tetramino.contains(block)) {
+                    continue
+                }
 
-            if (reachEndOfScreen(block)) {
-                continue
-            }
+                if (reachEndOfScreen(block)) {
+                    continue
+                }
 
-            if (checkAllCollisions(block)) {
-                continue
+                if (checkAllCollisions(block)) {
+                    continue
+                }
+                moveBlockDown(block)
+                hasUpdated = true
             }
-            moveBlockDown(block)
-            hasUpdated = true
+            return hasUpdated
+        }
+
+        for(lineMargin in lineTopMargin) {
+            for (block in canvas.children) {
+                if (tetramino.contains(block)) {
+                    continue
+                }
+                if (lineMargin > block.top) {
+                    if (!checkAllCollisions(block)) {
+                        moveBlockDown(block)
+                        hasUpdated = true
+                    }
+                }
+            }
         }
         return hasUpdated
     }
@@ -237,6 +259,7 @@ class GameFragment : Fragment() {
         val maxBlockPerLine = screenWidth/step
         var lineRemoved = false
         var linesRemoved = 0
+        var lineTopMargin = listOf<Int>()
         for (i in linesSize downTo 0) {
             var line = listOf<View>()
             for (child in canvas.children) {
@@ -248,6 +271,7 @@ class GameFragment : Fragment() {
             if (line.size == maxBlockPerLine) {
                 viewModel.updateScore()
                 linesRemoved++
+                lineTopMargin = listOf(line[0].top, *(lineTopMargin.toTypedArray()))
                 line.map {
                     canvas.removeView(it)
                 }
@@ -257,17 +281,17 @@ class GameFragment : Fragment() {
 
         if (lineRemoved) {
             viewModel.updateScore(linesRemoved)
-            updateBlockPositionsThread()
+            updateBlockPositionsThread(lineTopMargin)
         }
     }
 
-    private fun updateBlockPositionsThread() {
+    private fun updateBlockPositionsThread(lineTopMargin: List<Int>, specialBlockUpdate: Boolean = false) {
         val updaterHandler = Handler()
         var blocksUpdated = false
         val updaterRunnable = object: Runnable {
             override fun run() {
                 requireActivity().runOnUiThread {
-                    blocksUpdated = updateBlockPositions()
+                    blocksUpdated = updateBlockPositions(lineTopMargin, specialBlockUpdate)
                 }
                 if (!blocksUpdated) {
                     updaterHandler.removeCallbacks(this)
