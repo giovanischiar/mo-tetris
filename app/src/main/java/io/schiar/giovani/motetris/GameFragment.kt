@@ -16,8 +16,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.game_fragment.*
 import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.roundToInt
 
 
 class GameFragment : Fragment() {
@@ -76,14 +74,14 @@ class GameFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         step = ceil(resources.getDimension(R.dimen.blockSize)).toInt()
         screenWidth = step * 10
-        screenHeight = step * 15
+        screenHeight = step * 17
         val canvasParams = canvas.layoutParams
         canvasParams.height = screenHeight
         canvasParams.width = screenWidth
         canvas.layoutParams = canvasParams
 
         val maxBlockPerLine = screenWidth/step
-        val initialPos = step*((maxBlockPerLine)/2)
+        val initialPos = (step*((maxBlockPerLine)/2))-step
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
         viewModel.initTetramino(step, initialPos)
         viewModel.resetScore()
