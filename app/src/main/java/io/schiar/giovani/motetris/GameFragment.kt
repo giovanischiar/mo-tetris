@@ -130,6 +130,7 @@ class GameFragment : Fragment() {
                             }
                             checkLinesForFullLine()
                             tetraminoViewModel.nextTetramino(step, initialPos)
+                            viewModel.nextType.postValue(tetraminoViewModel.nextType())
                             return@Observer
                         }
 
