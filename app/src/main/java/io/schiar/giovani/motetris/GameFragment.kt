@@ -1,13 +1,12 @@
 package io.schiar.giovani.motetris
 
+import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
-import android.os.Message
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.GestureDetector.SimpleOnGestureListener
+import android.view.View.OnTouchListener
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.view.children
@@ -170,6 +169,27 @@ class GameFragment : Fragment() {
                 down_btn.setOnClickListener {
                     tetraminoViewModel.moveDown(step)
                 }
+
+                canvas.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
+                    override fun onSwipeLeft(): Boolean {
+                        tetraminoViewModel.moveLeft(step)
+                        return true
+                    }
+
+                    override fun onSwipeRight(): Boolean {
+                        tetraminoViewModel.moveRight(step)
+                        return true
+                    }
+
+                    override fun onSwipeBottom(): Boolean {
+                        tetraminoViewModel.moveDown(step)
+                        return true
+                    }
+
+                    override fun onDown() {
+                        tetraminoViewModel.rotateLeft(step)
+                    }
+                });
             })
 
 
@@ -352,5 +372,69 @@ class GameFragment : Fragment() {
             }
         }
         handler.postDelayed(runnable, 1000)
+    }
+}
+
+open class OnSwipeTouchListener(context: Context) : OnTouchListener {
+
+    private val gestureDetector: GestureDetector
+
+    init {
+        gestureDetector = GestureDetector(context, GestureListener())
+    }
+
+    open fun onSwipeLeft(): Boolean { return false }
+
+    open fun onSwipeRight(): Boolean { return false }
+
+    open fun onSwipeBottom(): Boolean { return false }
+
+    open fun onSwipeTop(): Boolean { return false }
+
+    open fun onDown() {}
+
+    override fun onTouch(v: View, event: MotionEvent): Boolean {
+        return gestureDetector.onTouchEvent(event)
+    }
+
+    private inner class GestureListener : SimpleOnGestureListener() {
+
+        override fun onDown(e: MotionEvent): Boolean {
+            return true
+        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            onDown()
+            return true
+        }
+
+        override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+            var result = false
+            try {
+                val diffY = e2.y - e1.y
+                val diffX = e2.x - e1.x
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > 100 && Math.abs(velocityX) > 100) {
+                        if (diffX > 0) {
+                            result = onSwipeRight()
+                        } else {
+                            result = onSwipeLeft()
+                        }
+                    }
+                } else {
+                    if (Math.abs(diffY) > 100 && Math.abs(velocityY) > 100) {
+                        if (diffY > 0) {
+                            result = onSwipeBottom()
+                        } else {
+                            result = onSwipeTop()
+                        }
+                    }
+                }
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+            }
+
+            return result
+        }
     }
 }
