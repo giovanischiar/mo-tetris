@@ -22,8 +22,6 @@ import kotlin.math.roundToInt
 
 class GameFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = GameFragment()
     fun onDeviceShake() {
         if (gravityLife.childCount > 0) {
             gravityLife.removeView(gravityLife.children.last())
@@ -87,7 +85,7 @@ class GameFragment : Fragment() {
         val maxBlockPerLine = screenWidth/step
         val initialPos = step*((maxBlockPerLine)/2)
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
-        viewModel.nextTetramino(step, initialPos)
+        viewModel.initTetramino(step, initialPos)
         viewModel.resetScore()
 
         viewModel.score.observe(this, Observer {
