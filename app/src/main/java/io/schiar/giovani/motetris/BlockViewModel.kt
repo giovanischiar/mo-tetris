@@ -4,6 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class BlockViewModel : ViewModel() {
+    val color: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
     val size: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
     }

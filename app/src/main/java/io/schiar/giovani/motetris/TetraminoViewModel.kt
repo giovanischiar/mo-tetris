@@ -1,8 +1,17 @@
 package io.schiar.giovani.motetris
 
+import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 
 class TetraminoViewModel {
+    val tetraminoColors = listOf(
+        Color.parseColor("#F44366"),
+        Color.parseColor("#9C27B0"),
+        Color.parseColor("#2196F3"),
+        Color.parseColor("#4CAF50"),
+        Color.parseColor("#FFEB3B")
+    )
+
     val tetraminoFetcher = TetraminoFetcher()
 
     private var state: Int = 0
@@ -179,10 +188,17 @@ class TetraminoViewModel {
         return listOf(block1, block2, block3, block4)
     }
 
+    private fun paintTetramino(color: Int, blocks: List<BlockViewModel>) {
+        blocks.map {
+            it.color.postValue(color)
+        }
+    }
+
     private fun createTetraminoI(blockSize: Int, newBlockList: List<BlockViewModel>): List<BlockViewModel> {
         newBlockList[1].moveDown(blockSize)
         newBlockList[2].moveDown(blockSize*2)
         newBlockList[3].moveDown(blockSize*3)
+        paintTetramino(tetraminoColors[0], newBlockList)
         return newBlockList
     }
 
@@ -211,6 +227,7 @@ class TetraminoViewModel {
         newBlockList[2].moveDown(blockSize)
         newBlockList[3].moveDown(blockSize)
         newBlockList[3].moveRight(blockSize)
+        paintTetramino(tetraminoColors[1], newBlockList)
         return newBlockList
     }
 
@@ -220,6 +237,7 @@ class TetraminoViewModel {
         newBlockList[2].moveRight(blockSize)
         newBlockList[3].moveDown(blockSize*2)
         newBlockList[3].moveRight(blockSize)
+        paintTetramino(tetraminoColors[2], newBlockList)
         return newBlockList
     }
 
@@ -246,6 +264,7 @@ class TetraminoViewModel {
         newBlockList[2].moveDown(blockSize*2)
         newBlockList[3].moveDown(blockSize*2)
         newBlockList[3].moveRight(blockSize)
+        paintTetramino(tetraminoColors[3], newBlockList)
         return newBlockList
     }
 
@@ -330,6 +349,7 @@ class TetraminoViewModel {
         newBlockList[2].moveRight(blockSize*2)
         newBlockList[3].moveDown(blockSize)
         newBlockList[3].moveRight(blockSize)
+        paintTetramino(tetraminoColors[4], newBlockList)
         return newBlockList
     }
 

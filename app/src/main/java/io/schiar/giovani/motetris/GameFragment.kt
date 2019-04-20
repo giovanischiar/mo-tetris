@@ -103,6 +103,10 @@ class GameFragment : Fragment() {
                 createTetramino(blocks)
 
                 blocks.mapIndexed { i, blockViewModel ->
+                    blockViewModel.color.observe(this, Observer {
+                        tetramino[i].setBackgroundColor(it)
+                    })
+
                     blockViewModel.size.observe(this, Observer {
                         val blockView = tetramino[i]
                         val blockViewParams = blockView.layoutParams as RelativeLayout.LayoutParams
