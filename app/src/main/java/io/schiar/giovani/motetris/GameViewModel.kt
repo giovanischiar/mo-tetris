@@ -1,39 +1,60 @@
 package io.schiar.giovani.motetris
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel;
+import io.schiar.giovani.motetris.model.*
+import java.util.*
 
 class GameViewModel : ViewModel() {
-    val nextType: MutableLiveData<Char> by lazy {
-        MutableLiveData<Char>()
+    private val gameLiveData: MutableLiveData<Game> by lazy {
+        MutableLiveData<Game>()
     }
 
-    val score: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
+    val bitsets: LiveData<List<BitSet>> = Transformations.map(gameLiveData) {
+        game -> game.board.lines
     }
 
-    val currentTetraminoViewModel: MutableLiveData<TetraminoViewModel> by lazy {
-        MutableLiveData<TetraminoViewModel>()
+    val isPaused: LiveData<Boolean> = Transformations.map(gameLiveData) {
+            game -> game.pause
     }
 
-    fun initTetramino(blockSize: Int, initialLeftMargin: Int) {
-        currentTetraminoViewModel.value = TetraminoViewModel().apply {
-            this.nextTetramino(blockSize, initialLeftMargin)
-        }
+    private fun pause() {
+        val game = gameLiveData.value ?: return
+        game.pause()
+        gameLiveData.postValue(game)
     }
 
-    fun updateScore() {
-        var newScore = this.score.value ?: 0
-        this.score.postValue(++newScore)
+    fun initializeBoard(x: Int, y: Int, width: Int, height: Int)  {
+        val game = Game(Resolution(width, height), Position(x, y))
+        start(game)
     }
 
-    fun updateScore(scoreToAdd: Int) {
-        var newScore = this.score.value ?: 0
-        newScore += scoreToAdd
-        this.score.postValue(newScore)
+    private fun start(game: Game) {
+        game.generateTetramino()
+        gameLiveData.postValue(game)
     }
 
-    fun resetScore() {
-        this.score.postValue(0)
+    fun nextState() {
+        val game = gameLiveData.value ?: return
+        game.moveCurrentTetraminoDown()
+        gameLiveData.postValue(game)
     }
-}
+
+    fun leftClicked() {
+        val game = gameLiveData.value ?: return
+        game.moveCurrentTetraminoLeft()
+        gameLiveData.postValue(game)
+    }
+
+    fun rightClicked() {
+        val game = gameLiveData.value ?: return
+        game.moveCurrentTetraminoRight()
+        gameLiveData.postValue(game)
+    }
+
+    fun downClicked() {
+        nextState()
+    }
+ }

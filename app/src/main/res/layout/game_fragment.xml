@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
     >
         <RelativeLayout
-                android:id="@+id/canvas"
+                android:id="@+id/viewPort"
                 android:layout_width="@dimen/screenWidth"
                 android:background="@drawable/canvas_shape"
                 android:layout_height="@dimen/screenHeight"

@@ -1,10 +1,10 @@
-package io.schiar.giovani.motetris
+package io.schiar.giovani.motetris.model
 
 import java.util.*
 
 class TetraminoFetcher {
-    private val types = listOf('i', 'o', 's', 't', 'l')
-    private val buffer: LinkedList<Char> = LinkedList()
+    private val types = TetraminoTypes.values().toList()
+    private val buffer: LinkedList<TetraminoTypes> = LinkedList()
 
     init {
         buffer.add(types.shuffled().first())
@@ -17,7 +17,7 @@ class TetraminoFetcher {
         return Tetramino(tetramino)
     }
 
-    fun next(): Char {
+    fun next(): TetraminoTypes {
         return buffer.last
     }
 }
