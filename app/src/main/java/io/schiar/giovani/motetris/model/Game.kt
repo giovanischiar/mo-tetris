@@ -13,7 +13,7 @@ class Game(resolution: Resolution, val sourcePosition: Position) {
         addTetraminoToSourcePositionOnBoard()
     }
 
-    fun generateNewTetramino() {
+    private fun generateNewTetramino() {
         currentTetramino = TetraminoFetcher().nextTetramino()
         currentTetraminoPosition = sourcePosition
         lastTetraminoPosition = sourcePosition
@@ -47,19 +47,23 @@ class Game(resolution: Resolution, val sourcePosition: Position) {
     }
 
     private fun updateCurrentTetraminoPosition() {
-        if (board.bitsetsCollidesBit(currentTetramino.shape, currentTetraminoPosition)) {
-            generateNewTetramino()
-            return
-        }
         removePreviousTetraminoPosition()
-        addTetraminoToSourcePositionOnBoard()
+        val collides = board.bitsetsCollidesBit(currentTetramino.shape, currentTetraminoPosition)
+        addTetraminoToSourcePositionOnBoard(collides)
+        if (collides) {
+            generateNewTetramino()
+        }
     }
 
     private fun removePreviousTetraminoPosition() {
         board.remBitSetsOnBoard(currentTetramino.shape, lastTetraminoPosition)
     }
 
-    private fun addTetraminoToSourcePositionOnBoard() {
-        board.addBitSetsOnBoard(currentTetramino.shape, currentTetraminoPosition)
+    private fun addTetraminoToSourcePositionOnBoard(last: Boolean = false) {
+        if (last) {
+            board.addBitSetsOnBoard(currentTetramino.shape, lastTetraminoPosition)
+        } else {
+            board.addBitSetsOnBoard(currentTetramino.shape, currentTetraminoPosition)
+        }
     }
 }

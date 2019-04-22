@@ -3,8 +3,6 @@ package io.schiar.giovani.motetris.model
 import android.util.Log
 import java.util.BitSet
 import io.schiar.giovani.motetris.model.TetraminoTypes.*
-import io.schiar.giovani.motetris.trueSize
-import io.schiar.giovani.motetris.withTrueSize
 
 class Tetramino(type: TetraminoTypes) {
     companion object { const val TETRAMINO_BLOCK_QTD = 4 }
