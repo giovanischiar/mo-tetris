@@ -7,7 +7,6 @@ class Game(resolution: Resolution, val sourcePosition: Position) {
     var currentTetramino = TetraminoFetcher().nextTetramino()
     var currentTetraminoPosition = sourcePosition
     var lastTetraminoPosition = sourcePosition
-    var currentRearEndTetraminoPosition = currentTetramino.rearEndPosition(sourcePosition)
 
     fun generateTetramino() {
         addTetraminoToSourcePositionOnBoard()
@@ -18,6 +17,10 @@ class Game(resolution: Resolution, val sourcePosition: Position) {
         currentTetraminoPosition = sourcePosition
         lastTetraminoPosition = sourcePosition
         addTetraminoToSourcePositionOnBoard()
+    }
+
+    fun start() {
+        this.pause = false
     }
 
     fun pause() {

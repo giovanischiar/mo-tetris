@@ -30,7 +30,6 @@ class GameFragment : Fragment(), Runnable {
         super.onActivityCreated(savedInstanceState)
         pixelSize = ceil(resources.getDimension(R.dimen.blockSize)).toInt()
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
-        viewModel.initializeBoard((pixelsWidthCount/2)-1, 0, pixelsWidthCount, pixelsHeightCount)
 
         val paintAreaParams = viewPort.layoutParams as RelativeLayout.LayoutParams
         paintAreaParams.width = pixelsWidthCount * pixelSize
@@ -43,6 +42,8 @@ class GameFragment : Fragment(), Runnable {
         left_btn.setOnClickListener { onLeftButtonClicked() }
         right_btn.setOnClickListener { onRightButtonClicked() }
         down_btn.setOnClickListener { onDownButtonClicked() }
+
+        viewModel.startGame((pixelsWidthCount/2)-1, 0, pixelsWidthCount, pixelsHeightCount)
     }
 
     private fun onLeftButtonClicked() {
@@ -57,13 +58,10 @@ class GameFragment : Fragment(), Runnable {
         viewModel.downClicked()
     }
 
-
     private fun onGameState(isPaused: Boolean) {
+        gameHandler.removeCallbacks(this)
         if (!isPaused) {
-            gameHandler.removeCallbacks(this)
             gameHandler.postDelayed(this, 1000)
-        } else {
-            gameHandler.removeCallbacks(this)
         }
 
     }

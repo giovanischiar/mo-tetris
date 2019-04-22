@@ -16,8 +16,8 @@ class GameViewModel : ViewModel() {
         game -> game.board.lines
     }
 
-    val isPaused: LiveData<Boolean> = Transformations.map(gameLiveData) {
-            game -> game.pause
+    val isPaused: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
 
     private fun pause() {
@@ -26,14 +26,16 @@ class GameViewModel : ViewModel() {
         gameLiveData.postValue(game)
     }
 
-    fun initializeBoard(x: Int, y: Int, width: Int, height: Int)  {
+    fun startGame(x: Int, y: Int, width: Int, height: Int)  {
         val game = Game(Resolution(width, height), Position(x, y))
-        start(game)
+        initializeGame(game)
     }
 
-    private fun start(game: Game) {
+    private fun initializeGame(game: Game) {
         game.generateTetramino()
+        game.start()
         gameLiveData.postValue(game)
+        isPaused.postValue(game.pause)
     }
 
     fun nextState() {
