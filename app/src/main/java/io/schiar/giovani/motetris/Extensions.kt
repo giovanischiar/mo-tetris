@@ -40,6 +40,9 @@ operator fun BitSet.minusAssign(other: BitSet) {
 }
 
 fun BitSet.orWithOffset(other: BitSet, offset: Int = 0) {
+    if (offset < 0) {
+        return
+    }
     val newB1 = BitSet()
     for(i in 0 until other.length()) {
         newB1.set(i+offset, other[i])
@@ -49,6 +52,9 @@ fun BitSet.orWithOffset(other: BitSet, offset: Int = 0) {
 
 
 fun BitSet.xorWithOffset(other: BitSet, offset: Int = 0) {
+    if (offset < 0) {
+        return
+    }
     val newB1 = BitSet()
     for(i in 0 until other.length()) {
         newB1.set(i+offset, other[i])
