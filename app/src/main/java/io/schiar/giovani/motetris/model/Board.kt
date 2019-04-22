@@ -20,8 +20,16 @@ class Board(val resolution: Resolution) {
         if (resolution.height < (nextPosition.y + bitSets.size)) {
             return true
         }
+
+        if(nextPosition.x < 0) {
+            return true
+        }
+
         var nextY = nextPosition.y
         for (bitSet in bitSets) {
+            if (resolution.width < (nextPosition.x + bitSet.length())) {
+                return true
+            }
             val newLine = BitSet()
             newLine.orWithOffset(bitSet, nextPosition.x)
             if (!(lines[nextY] * newLine).isEmpty) {
