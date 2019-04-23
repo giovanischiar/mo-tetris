@@ -8,7 +8,6 @@ import io.schiar.giovani.motetris.model.*
 import java.util.*
 
 class GameViewModel : ViewModel(), OnChangeGameListener {
-    private lateinit var gameThread: Thread
     private lateinit var onInputListener: OnInputListener
 
     private val gameLiveData: MutableLiveData<Game> by lazy {
