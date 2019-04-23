@@ -3,7 +3,7 @@ package io.schiar.giovani.motetris.model
 import io.schiar.giovani.motetris.*
 import java.util.*
 
-class Board(val resolution: Resolution) {
+class Board(private val resolution: Resolution) {
     var lines: List<BitSet>
 
     init {

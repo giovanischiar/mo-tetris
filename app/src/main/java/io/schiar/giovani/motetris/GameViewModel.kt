@@ -40,19 +40,25 @@ class GameViewModel : ViewModel() {
 
     fun nextState() {
         val game = gameLiveData.value ?: return
-        game.moveCurrentTetraminoDown()
+        game.moveTetraminoDown()
         gameLiveData.postValue(game)
     }
 
     fun leftClicked() {
         val game = gameLiveData.value ?: return
-        game.moveCurrentTetraminoLeft()
+        game.moveTetraminoLeft()
         gameLiveData.postValue(game)
     }
 
     fun rightClicked() {
         val game = gameLiveData.value ?: return
-        game.moveCurrentTetraminoRight()
+        game.moveTetraminoRight()
+        gameLiveData.postValue(game)
+    }
+
+    fun upClicked() {
+        val game = gameLiveData.value ?: return
+        game.rotateTetraminoClockwise()
         gameLiveData.postValue(game)
     }
 

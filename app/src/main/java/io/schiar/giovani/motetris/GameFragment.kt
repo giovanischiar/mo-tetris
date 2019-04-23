@@ -42,6 +42,7 @@ class GameFragment : Fragment(), Runnable {
         left_btn.setOnClickListener { onLeftButtonClicked() }
         right_btn.setOnClickListener { onRightButtonClicked() }
         down_btn.setOnClickListener { onDownButtonClicked() }
+        up_btn.setOnClickListener { onUpButtonClicked() }
 
         viewModel.startGame((pixelsWidthCount/2)-1, 0, pixelsWidthCount, pixelsHeightCount)
     }
@@ -56,6 +57,10 @@ class GameFragment : Fragment(), Runnable {
 
     private fun onDownButtonClicked() {
         viewModel.downClicked()
+    }
+
+    private fun onUpButtonClicked() {
+        viewModel.upClicked()
     }
 
     private fun onGameState(isPaused: Boolean) {
