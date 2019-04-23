@@ -1,12 +1,22 @@
 package io.schiar.giovani.motetris.model
 
-class Game(resolution: Resolution, val sourcePosition: Position) {
+import java.util.*
+
+class Game(resolution: Resolution, private val sourcePosition: Position) {
 
     val board: Board = BoardFetcher().fetch(resolution)
     var pause: Boolean = false
     var currentTetramino = TetraminoFetcher().nextTetramino()
     var currentTetraminoPosition = sourcePosition
     var lastTetraminoPosition = sourcePosition
+
+    fun start() {
+        this.pause = false
+    }
+
+    fun pause() {
+        this.pause = true
+    }
 
     fun generateTetramino() {
         addTetraminoOnBoard()
@@ -17,14 +27,6 @@ class Game(resolution: Resolution, val sourcePosition: Position) {
         currentTetraminoPosition = sourcePosition
         lastTetraminoPosition = sourcePosition
         addTetraminoOnBoard()
-    }
-
-    fun start() {
-        this.pause = false
-    }
-
-    fun pause() {
-        this.pause = true
     }
 
     fun moveTetraminoDown() {
@@ -60,6 +62,7 @@ class Game(resolution: Resolution, val sourcePosition: Position) {
         val collides = board.bitsetsCollidesBit(currentTetramino.shape, currentTetraminoPosition)
         addTetraminoOnBoard(collides)
         if (collides && !sideUpdating) {
+            board.removeFullLinesAndUpdateBoard()
             generateNewTetramino()
         }
     }

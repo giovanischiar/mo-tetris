@@ -12,8 +12,17 @@ class Board(private val resolution: Resolution) {
             val bitSet = BitSet()
             lines = listOf(bitSet, *(lines.toTypedArray()))
         }
+    }
 
-        lines[resolution.height-1].set(5)
+    fun removeFullLinesAndUpdateBoard(): Boolean {
+        var linesWasRemoved = false
+        for ((i, bitSet) in lines.withIndex()) {
+            if (bitSet.nextClearBit(0) >= resolution.width) {
+                lines = listOf(BitSet(), *(lines.subList(0, i).toTypedArray()), *(lines.subList(i+1, lines.size)).toTypedArray())
+                linesWasRemoved = true
+            }
+        }
+        return linesWasRemoved
     }
 
     fun bitsetsCollidesBit(bitSets: List<BitSet>, nextPosition: Position): Boolean {
