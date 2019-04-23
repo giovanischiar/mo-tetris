@@ -1,25 +1,23 @@
 package io.schiar.giovani.motetris.model
 
-import java.util.*
+import io.schiar.giovani.motetris.*
 
-class Game(resolution: Resolution, private val sourcePosition: Position) {
+class Game(resolution: Resolution, private val sourcePosition: Position, private val onChangeGameListener: OnChangeGameListener): Runnable, OnInputListener {
 
     val board: Board = BoardFetcher().fetch(resolution)
-    var pause: Boolean = false
     var currentTetramino = TetraminoFetcher().nextTetramino()
     var currentTetraminoPosition = sourcePosition
     var lastTetraminoPosition = sourcePosition
 
-    fun start() {
-        this.pause = false
-    }
-
-    fun pause() {
-        this.pause = true
-    }
-
-    fun generateTetramino() {
-        addTetraminoOnBoard()
+    override fun run() {
+        while (!Thread.currentThread().isInterrupted) {
+            try {
+                moveTetraminoDown()
+                Thread.sleep(1000)
+            } catch (ex: InterruptedException) {
+                Thread.currentThread().interrupt()
+            }
+        }
     }
 
     private fun generateNewTetramino() {
@@ -29,25 +27,25 @@ class Game(resolution: Resolution, private val sourcePosition: Position) {
         addTetraminoOnBoard()
     }
 
-    fun moveTetraminoDown() {
+    override fun moveTetraminoDown() {
         lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x, currentTetraminoPosition.y+1)
         updateCurrentTetraminoPosition()
     }
 
-    fun moveTetraminoLeft() {
+    override fun moveTetraminoLeft() {
         lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x-1, currentTetraminoPosition.y)
         updateCurrentTetraminoPosition(true)
     }
 
-    fun moveTetraminoRight() {
+    override fun moveTetraminoRight() {
         lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x+1, currentTetraminoPosition.y)
         updateCurrentTetraminoPosition(true)
     }
 
-    fun rotateTetraminoClockwise() {
+    override fun rotateTetraminoClockwise() {
         lastTetraminoPosition = currentTetraminoPosition
         removeTetraminoOnLastPosition()
         currentTetramino.shape = TetraminoRotator(currentTetramino).rotateClockWise()
@@ -55,6 +53,7 @@ class Game(resolution: Resolution, private val sourcePosition: Position) {
             currentTetramino.shape = TetraminoRotator(currentTetramino).rotateAntiClockWise()
         }
         addTetraminoOnBoard()
+        onChangeGameListener.changeGameState(this)
     }
 
     private fun updateCurrentTetraminoPosition(sideUpdating: Boolean = false) {
@@ -65,13 +64,14 @@ class Game(resolution: Resolution, private val sourcePosition: Position) {
             board.removeFullLinesAndUpdateBoard()
             generateNewTetramino()
         }
+        onChangeGameListener.changeGameState(this)
     }
 
     private fun removeTetraminoOnLastPosition() {
         board.remBitSetsOnBoard(currentTetramino.shape, lastTetraminoPosition)
     }
 
-    private fun addTetraminoOnBoard(collides: Boolean = false) {
+    fun addTetraminoOnBoard(collides: Boolean = false) {
         if (collides) {
             currentTetraminoPosition = lastTetraminoPosition
         }

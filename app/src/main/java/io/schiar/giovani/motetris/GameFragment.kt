@@ -11,13 +11,11 @@ import kotlinx.android.synthetic.main.game_fragment.*
 import java.util.*
 import kotlin.math.ceil
 
-
-class GameFragment : Fragment(), Runnable {
+class GameFragment : Fragment() {
     private lateinit var viewModel: GameViewModel
     private var pixelSize = 0
     private val pixelsWidthCount = 10
     private val pixelsHeightCount = 17
-    private val gameHandler = Handler()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,8 +34,7 @@ class GameFragment : Fragment(), Runnable {
         paintAreaParams.height = pixelsHeightCount * pixelSize
         viewPort.layoutParams = paintAreaParams
 
-        viewModel.bitsets.observe(this, Observer { onBoardChanged(it) })
-        viewModel.isPaused.observe(this, Observer { onGameState(it) })
+        viewModel.bitSets.observe(this, Observer { onBoardChanged(it) })
 
         left_btn.setOnClickListener { onLeftButtonClicked() }
         right_btn.setOnClickListener { onRightButtonClicked() }
@@ -63,20 +60,7 @@ class GameFragment : Fragment(), Runnable {
         viewModel.upClicked()
     }
 
-    private fun onGameState(isPaused: Boolean) {
-        gameHandler.removeCallbacks(this)
-        if (!isPaused) {
-            gameHandler.postDelayed(this, 1000)
-        }
-
-    }
-
-    override fun run() {
-        viewModel.nextState()
-        gameHandler.postDelayed(this, 1000)
-    }
-
-    fun onBoardChanged(bitSets: List<BitSet>) {
+    private fun onBoardChanged(bitSets: List<BitSet>) {
         viewPort.removeAllViews()
         for ((i, bitSet) in bitSets.withIndex()) {
             for (j in (0..bitSet.length())) {

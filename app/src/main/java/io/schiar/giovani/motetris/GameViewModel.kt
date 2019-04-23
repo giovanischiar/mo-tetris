@@ -7,62 +7,42 @@ import androidx.lifecycle.ViewModel;
 import io.schiar.giovani.motetris.model.*
 import java.util.*
 
-class GameViewModel : ViewModel() {
+class GameViewModel : ViewModel(), OnChangeGameListener {
+    private lateinit var gameThread: Thread
+    private lateinit var onInputListener: OnInputListener
+
     private val gameLiveData: MutableLiveData<Game> by lazy {
         MutableLiveData<Game>()
     }
 
-    val bitsets: LiveData<List<BitSet>> = Transformations.map(gameLiveData) {
+    val bitSets: LiveData<List<BitSet>> = Transformations.map(gameLiveData) {
         game -> game.board.lines
     }
 
-    val isPaused: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-
-    private fun pause() {
-        val game = gameLiveData.value ?: return
-        game.pause()
-        gameLiveData.postValue(game)
-    }
-
     fun startGame(x: Int, y: Int, width: Int, height: Int)  {
-        val game = Game(Resolution(width, height), Position(x, y))
-        initializeGame(game)
+        val game = Game(Resolution(width, height), Position(x, y), this)
+        game.addTetraminoOnBoard()
+        onInputListener = game
+        Thread(game).start()
     }
 
-    private fun initializeGame(game: Game) {
-        game.generateTetramino()
-        game.start()
-        gameLiveData.postValue(game)
-        isPaused.postValue(game.pause)
-    }
-
-    fun nextState() {
-        val game = gameLiveData.value ?: return
-        game.moveTetraminoDown()
+    override fun changeGameState(game: Game) {
         gameLiveData.postValue(game)
     }
 
     fun leftClicked() {
-        val game = gameLiveData.value ?: return
-        game.moveTetraminoLeft()
-        gameLiveData.postValue(game)
+        onInputListener.moveTetraminoLeft()
     }
 
     fun rightClicked() {
-        val game = gameLiveData.value ?: return
-        game.moveTetraminoRight()
-        gameLiveData.postValue(game)
+        onInputListener.moveTetraminoRight()
     }
 
     fun upClicked() {
-        val game = gameLiveData.value ?: return
-        game.rotateTetraminoClockwise()
-        gameLiveData.postValue(game)
+        onInputListener.rotateTetraminoClockwise()
     }
 
     fun downClicked() {
-        nextState()
+        onInputListener.moveTetraminoDown()
     }
  }
