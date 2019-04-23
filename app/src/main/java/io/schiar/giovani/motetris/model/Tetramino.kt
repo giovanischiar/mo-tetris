@@ -30,10 +30,6 @@ class Tetramino(type: TetraminoTypes) {
         return width
     }
 
-    fun rearEndPosition(position: Position): Position {
-        return Position(position.x + width(), position.y + shape.size )
-    }
-
     private fun buildI() {
         var i = 0
         while(true) {

@@ -28,20 +28,20 @@ class Game(resolution: Resolution, val sourcePosition: Position) {
     }
 
     fun moveTetraminoDown() {
+        lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x, currentTetraminoPosition.y+1)
-        lastTetraminoPosition = Position(currentTetraminoPosition.x, currentTetraminoPosition.y-1)
         updateCurrentTetraminoPosition()
     }
 
     fun moveTetraminoLeft() {
+        lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x-1, currentTetraminoPosition.y)
-        lastTetraminoPosition = Position(currentTetraminoPosition.x+1, currentTetraminoPosition.y)
         updateCurrentTetraminoPosition(true)
     }
 
     fun moveTetraminoRight() {
+        lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x+1, currentTetraminoPosition.y)
-        lastTetraminoPosition = Position(currentTetraminoPosition.x-1, currentTetraminoPosition.y)
         updateCurrentTetraminoPosition(true)
     }
 
