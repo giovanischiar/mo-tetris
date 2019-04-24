@@ -1,9 +1,12 @@
 package io.schiar.giovani.motetris
 
 import io.schiar.giovani.motetris.model.Game
+import java.util.*
 
 interface OnChangeGameListener {
-    fun changeGameState(game: Game)
+    fun updateGameState(game: Game)
+    fun updateNextTetramino(nextTetramino: List<BitSet>)
+    fun updateScore(score: Int)
 }
 
 interface OnInputListener {

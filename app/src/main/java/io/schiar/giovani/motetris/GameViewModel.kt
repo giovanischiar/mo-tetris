@@ -3,8 +3,10 @@ package io.schiar.giovani.motetris
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel;
-import io.schiar.giovani.motetris.model.*
+import androidx.lifecycle.ViewModel
+import io.schiar.giovani.motetris.model.Game
+import io.schiar.giovani.motetris.model.Position
+import io.schiar.giovani.motetris.model.Resolution
 import java.util.*
 
 class GameViewModel : ViewModel(), OnChangeGameListener {
@@ -18,6 +20,15 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         game -> game.board.lines
     }
 
+    val nextContent: MutableLiveData<List<BitSet>> by lazy {
+        MutableLiveData<List<BitSet>>()
+    }
+
+    val score: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+
     fun startGame(x: Int, y: Int, width: Int, height: Int)  {
         val game = Game(Resolution(width, height), Position(x, y), this)
         game.addTetraminoOnBoard()
@@ -25,7 +36,15 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         Thread(game).start()
     }
 
-    override fun changeGameState(game: Game) {
+    override fun updateNextTetramino(nextTetramino: List<BitSet>) {
+        this.nextContent.postValue(nextTetramino)
+    }
+
+    override fun updateScore(score: Int) {
+        this.score.postValue(score)
+    }
+
+    override fun updateGameState(game: Game) {
         gameLiveData.postValue(game)
     }
 

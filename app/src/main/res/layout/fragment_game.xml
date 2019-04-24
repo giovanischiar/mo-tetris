@@ -4,17 +4,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="15dp"
 >
     <RelativeLayout
-            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
     >
         <RelativeLayout
                 android:id="@+id/viewPort"
                 android:layout_width="@dimen/screenWidth"
-                android:background="@drawable/canvas_shape"
                 android:layout_height="@dimen/screenHeight"
+                android:background="@drawable/canvas_shape"
                 android:layout_centerInParent="true"
         />
 
@@ -22,74 +22,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/canvas_shape"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
         >
             <RelativeLayout
+                    android:id="@+id/next"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:gravity="center"
-                    android:id="@+id/next"
             >
             </RelativeLayout>
         </RelativeLayout>
 
         <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_alignParentStart="true"
         >
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gravity"
-            />
             <LinearLayout
-                    android:id="@+id/gravityLife"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                <FrameLayout
-                        android:background="@drawable/gravity_shape"
-                        android:layout_width="@dimen/blockSize"
-                        android:layout_height="@dimen/blockSize"
-                />
-                <FrameLayout
-                        android:background="@drawable/gravity_shape"
-                        android:layout_width="@dimen/blockSize"
-                        android:layout_height="@dimen/blockSize"
-                />
-                <FrameLayout
-                        android:background="@drawable/gravity_shape"
-                        android:layout_width="@dimen/blockSize"
-                        android:layout_height="@dimen/blockSize"
-                />
-            </LinearLayout>
-            <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_gravity="center"
+                    android:orientation="horizontal"
             >
-                <LinearLayout
+                <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                >
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Score:"
-                    />
-                    <TextView
-                            android:layout_marginLeft="3dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/score"
-                            android:text="0"
-                    />
-                </LinearLayout>
-
-            </FrameLayout>
+                        android:text="Score:"
+                />
+                <TextView
+                        android:layout_marginLeft="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/score"
+                        android:text="0"
+                />
+            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>

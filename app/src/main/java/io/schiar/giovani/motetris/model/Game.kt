@@ -1,11 +1,13 @@
 package io.schiar.giovani.motetris.model
 
-import io.schiar.giovani.motetris.*
+import io.schiar.giovani.motetris.OnChangeGameListener
+import io.schiar.giovani.motetris.OnInputListener
 
 class Game(resolution: Resolution, private val sourcePosition: Position, private val onChangeGameListener: OnChangeGameListener): Runnable, OnInputListener {
 
     val board: Board = BoardFetcher().fetch(resolution)
-    var currentTetramino = TetraminoFetcher().nextTetramino()
+    val tetraminoFetcher = TetraminoFetcher()
+    var currentTetramino = tetraminoFetcher.nextTetramino()
     var currentTetraminoPosition = sourcePosition
     var lastTetraminoPosition = sourcePosition
 
@@ -21,7 +23,7 @@ class Game(resolution: Resolution, private val sourcePosition: Position, private
     }
 
     private fun generateNewTetramino() {
-        currentTetramino = TetraminoFetcher().nextTetramino()
+        currentTetramino = tetraminoFetcher.nextTetramino()
         currentTetraminoPosition = sourcePosition
         lastTetraminoPosition = sourcePosition
         addTetraminoOnBoard()
@@ -53,7 +55,7 @@ class Game(resolution: Resolution, private val sourcePosition: Position, private
             currentTetramino.shape = TetraminoRotator(currentTetramino).rotateAntiClockWise()
         }
         addTetraminoOnBoard()
-        onChangeGameListener.changeGameState(this)
+        onChangeGameListener.updateGameState(this)
     }
 
     private fun updateCurrentTetraminoPosition(sideUpdating: Boolean = false) {
@@ -62,9 +64,11 @@ class Game(resolution: Resolution, private val sourcePosition: Position, private
         addTetraminoOnBoard(collides)
         if (collides && !sideUpdating) {
             board.removeFullLinesAndUpdateBoard()
+            onChangeGameListener.updateScore(board.linesRemoved)
             generateNewTetramino()
         }
-        onChangeGameListener.changeGameState(this)
+        onChangeGameListener.updateGameState(this)
+        onChangeGameListener.updateNextTetramino(Tetramino(tetraminoFetcher.next()).shape)
     }
 
     private fun removeTetraminoOnLastPosition() {
