@@ -6,7 +6,7 @@ import java.util.*
 interface OnChangeGameListener {
     fun updateGameState(game: Game)
     fun updateNextTetramino(nextTetramino: List<BitSet>)
-    fun updateScore(score: Int)
+    fun updateScore(score: String)
 }
 
 interface OnInputListener {

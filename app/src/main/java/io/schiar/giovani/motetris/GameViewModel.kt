@@ -24,8 +24,8 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         MutableLiveData<List<BitSet>>()
     }
 
-    val score: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
+    val score: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
     }
 
 
@@ -40,7 +40,7 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         this.nextContent.postValue(nextTetramino)
     }
 
-    override fun updateScore(score: Int) {
+    override fun updateScore(score: String) {
         this.score.postValue(score)
     }
 

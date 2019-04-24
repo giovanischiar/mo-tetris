@@ -47,8 +47,8 @@ class GameFragment : Fragment() {
         viewPort.layoutParams = paintAreaParams
     }
 
-    private fun onScoreChanged(score: Int) {
-        this.score.text = score.toString()
+    private fun onScoreChanged(score: String) {
+        this.score.text = score
     }
 
     private fun onNextChanged(tetraminoShape: List<BitSet>) {

@@ -64,7 +64,7 @@ class Game(resolution: Resolution, private val sourcePosition: Position, private
         addTetraminoOnBoard(collides)
         if (collides && !sideUpdating) {
             board.removeFullLinesAndUpdateBoard()
-            onChangeGameListener.updateScore(board.linesRemoved)
+            onChangeGameListener.updateScore(board.linesRemoved.toString())
             generateNewTetramino()
         }
         onChangeGameListener.updateGameState(this)
