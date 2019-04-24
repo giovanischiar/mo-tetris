@@ -1,3 +1,20 @@
-<resources>
-    <string name="app_name">MoTetris</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">
+        MoTetris
+    </string>
+    <string name="score" tools:keep="@string/score">
+        Score: %s
+    </string>
+    <string name="up" tools:keep="@string/up">
+        Rotate tetramino
+    </string>
+    <string name="down" tools:keep="@string/down">
+        Move tetramino down
+    </string>
+    <string name="left" tools:keep="@string/left">
+        Move tetramino left
+    </string>
+    <string name="right" tools:keep="@string/right">
+        Move tetramino right
+    </string>
 </resources>

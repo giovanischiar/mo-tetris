@@ -3,13 +3,18 @@ package io.schiar.giovani.motetris.model
 import io.schiar.giovani.motetris.OnChangeGameListener
 import io.schiar.giovani.motetris.OnInputListener
 
-class Game(resolution: Resolution, private val sourcePosition: Position, private val onChangeGameListener: OnChangeGameListener): Runnable, OnInputListener {
+class Game(
+    resolution: Resolution,
+    private val sourcePosition: Position,
+    private val onChangeGameListener: OnChangeGameListener
+): Runnable, OnInputListener {
 
     val board: Board = BoardFetcher().fetch(resolution)
-    val tetraminoFetcher = TetraminoFetcher()
-    var currentTetramino = tetraminoFetcher.nextTetramino()
-    var currentTetraminoPosition = sourcePosition
-    var lastTetraminoPosition = sourcePosition
+
+    private val tetraminoFetcher = TetraminoFetcher()
+    private var currentTetramino = tetraminoFetcher.nextTetramino()
+    private var currentTetraminoPosition = sourcePosition
+    private var lastTetraminoPosition = sourcePosition
 
     override fun run() {
         while (!Thread.currentThread().isInterrupted) {
@@ -50,9 +55,9 @@ class Game(resolution: Resolution, private val sourcePosition: Position, private
     override fun rotateTetraminoClockwise() {
         lastTetraminoPosition = currentTetraminoPosition
         removeTetraminoOnLastPosition()
-        currentTetramino.shape = TetraminoRotator(currentTetramino).rotateClockWise()
-        if (board.bitsetsCollidesBit(currentTetramino.shape, currentTetraminoPosition)) {
-            currentTetramino.shape = TetraminoRotator(currentTetramino).rotateAntiClockWise()
+        currentTetramino.shape = TetraminoFlipper(currentTetramino).rotateClockWise()
+        if (board.verifyBitSetsCollision(currentTetramino.shape, currentTetraminoPosition)) {
+            currentTetramino.shape = TetraminoFlipper(currentTetramino).rotateAntiClockWise()
         }
         addTetraminoOnBoard()
         onChangeGameListener.updateGameState(this)
@@ -60,7 +65,7 @@ class Game(resolution: Resolution, private val sourcePosition: Position, private
 
     private fun updateCurrentTetraminoPosition(sideUpdating: Boolean = false) {
         removeTetraminoOnLastPosition()
-        val collides = board.bitsetsCollidesBit(currentTetramino.shape, currentTetraminoPosition)
+        val collides = board.verifyBitSetsCollision(currentTetramino.shape, currentTetraminoPosition)
         addTetraminoOnBoard(collides)
         if (collides && !sideUpdating) {
             board.removeFullLinesAndUpdateBoard()
@@ -82,4 +87,5 @@ class Game(resolution: Resolution, private val sourcePosition: Position, private
 
         board.addBitSetsOnBoard(currentTetramino.shape, currentTetraminoPosition)
     }
+
 }

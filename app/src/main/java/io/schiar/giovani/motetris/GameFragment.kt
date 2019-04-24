@@ -13,6 +13,7 @@ import java.util.*
 import kotlin.math.ceil
 
 class GameFragment : Fragment() {
+
     private lateinit var viewModel: GameViewModel
     private var pixelSize = 0
     private val pixelsWidthCount = 10
@@ -41,14 +42,14 @@ class GameFragment : Fragment() {
     }
 
     private fun setupViewPort() {
-        val paintAreaParams = viewPort.layoutParams as RelativeLayout.LayoutParams
+        val paintAreaParams = viewport.layoutParams as RelativeLayout.LayoutParams
         paintAreaParams.width = pixelsWidthCount * pixelSize
         paintAreaParams.height = pixelsHeightCount * pixelSize
-        viewPort.layoutParams = paintAreaParams
+        viewport.layoutParams = paintAreaParams
     }
 
     private fun onScoreChanged(score: String) {
-        this.score.text = score
+        this.score.text = String.format(resources.getString(R.string.score), score)
     }
 
     private fun onNextChanged(tetraminoShape: List<BitSet>) {
@@ -56,7 +57,7 @@ class GameFragment : Fragment() {
     }
 
     private fun onViewPortChanged(bitSets: List<BitSet>) {
-        drawBitSets(viewPort, bitSets)
+        drawBitSets(viewport, bitSets)
     }
 
     private fun drawBitSets(layout: RelativeLayout, bitSets: List<BitSet>) {
@@ -64,7 +65,7 @@ class GameFragment : Fragment() {
         for ((i, bitSet) in bitSets.withIndex()) {
             for (j in (0..bitSet.length())) {
                 if (bitSet[j]) {
-                    val block = layoutInflater.inflate(R.layout.block, null)
+                    val block = layoutInflater.inflate(R.layout.block, layout, false)
                     layout.addView(block)
                     val blockParams = block.layoutParams as RelativeLayout.LayoutParams
                     blockParams.apply {
@@ -94,4 +95,5 @@ class GameFragment : Fragment() {
     private fun onUpButtonClicked() {
         viewModel.upClicked()
     }
+
 }

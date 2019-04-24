@@ -3,6 +3,7 @@ package io.schiar.giovani.motetris.model
 import java.util.*
 
 class TetraminoFetcher {
+
     private val types = TetraminoTypes.values().toList()
     private val buffer: LinkedList<TetraminoTypes> = LinkedList()
 
@@ -20,4 +21,5 @@ class TetraminoFetcher {
     fun next(): TetraminoTypes {
         return buffer.last
     }
+
 }

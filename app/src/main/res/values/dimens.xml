@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="blockSize">18.5dp</dimen>
-    <dimen name="screenWidth">200dp</dimen>
-    <dimen name="screenHeight">300dp</dimen>
-    <dimen name="strokeWidth">1.5dp</dimen>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="blockSize" tools:keep="@dimen/blockSize">18.5dp</dimen>
+    <dimen name="strokeWidth" tools:keep="@dimen/strokeWidth">1.5dp</dimen>
 </resources>

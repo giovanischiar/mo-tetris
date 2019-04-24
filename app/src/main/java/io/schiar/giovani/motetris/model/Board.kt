@@ -6,6 +6,7 @@ import io.schiar.giovani.motetris.xorWithOffset
 import java.util.*
 
 class Board(private val resolution: Resolution) {
+
     var lines: List<BitSet>
     var linesRemoved = 0
 
@@ -21,7 +22,11 @@ class Board(private val resolution: Resolution) {
         var linesWasRemoved = false
         for ((i, bitSet) in lines.withIndex()) {
             if (bitSet.nextClearBit(0) >= resolution.width) {
-                lines = listOf(BitSet(), *(lines.subList(0, i).toTypedArray()), *(lines.subList(i+1, lines.size)).toTypedArray())
+                lines = listOf(
+                    BitSet(),
+                    *(lines.subList(0, i).toTypedArray()),
+                    *(lines.subList(i+1, lines.size)).toTypedArray()
+                )
                 linesRemoved++
                 linesWasRemoved = true
             }
@@ -29,7 +34,7 @@ class Board(private val resolution: Resolution) {
         return linesWasRemoved
     }
 
-    fun bitsetsCollidesBit(bitSets: List<BitSet>, nextPosition: Position): Boolean {
+    fun verifyBitSetsCollision(bitSets: List<BitSet>, nextPosition: Position): Boolean {
         if (resolution.height < (nextPosition.y + bitSets.size)) {
             return true
         }
@@ -69,4 +74,5 @@ class Board(private val resolution: Resolution) {
             newY++
         }
     }
+
 }

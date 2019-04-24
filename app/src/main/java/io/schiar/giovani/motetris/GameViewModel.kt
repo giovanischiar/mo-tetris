@@ -10,6 +10,7 @@ import io.schiar.giovani.motetris.model.Resolution
 import java.util.*
 
 class GameViewModel : ViewModel(), OnChangeGameListener {
+
     private lateinit var onInputListener: OnInputListener
 
     private val gameLiveData: MutableLiveData<Game> by lazy {
@@ -63,4 +64,5 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
     fun downClicked() {
         onInputListener.moveTetraminoDown()
     }
+
  }

@@ -1,16 +1,15 @@
 package io.schiar.giovani.motetris.model
 
-import android.util.Log
-import java.util.BitSet
 import io.schiar.giovani.motetris.model.TetraminoTypes.*
+import java.util.*
 
 class Tetramino(type: TetraminoTypes) {
+
     companion object { const val TETRAMINO_BLOCK_QTD = 4 }
 
     var shape = listOf<BitSet>()
 
     init {
-        Log.d("motetris", type.toString())
         when(type) {
             I -> buildI()
             L -> buildL()
@@ -103,4 +102,5 @@ class Tetramino(type: TetraminoTypes) {
             i++
         }
     }
+
 }
