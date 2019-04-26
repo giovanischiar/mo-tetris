@@ -25,13 +25,16 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         MutableLiveData<List<BitSet>>()
     }
 
-    val score: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
-    }
+    val score = MutableLiveData("0")
 
+    val resolutionWidth = MutableLiveData(10)
 
-    fun startGame(x: Int, y: Int, width: Int, height: Int)  {
-        val game = Game(Resolution(width, height), Position(x, y), this)
+    val resolutionHeight = MutableLiveData(17)
+
+    fun startGame()  {
+        val width = resolutionWidth.value ?: return
+        val height = resolutionHeight.value ?: return
+        val game = Game(Resolution(width, height), Position((width/2)-1, 0), this)
         game.addTetraminoOnBoard()
         onInputListener = game
         Thread(game).start()
