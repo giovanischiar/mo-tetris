@@ -27,9 +27,13 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
 
     val score = MutableLiveData("0")
 
-    val resolutionWidth = MutableLiveData(10)
+    val resolutionWidth = MutableLiveData<Int>().apply {
+        value = 10
+    }
 
-    val resolutionHeight = MutableLiveData(17)
+    val resolutionHeight = MutableLiveData<Int>().apply {
+        value = 17
+    }
 
     fun startGame()  {
         val width = resolutionWidth.value ?: return
