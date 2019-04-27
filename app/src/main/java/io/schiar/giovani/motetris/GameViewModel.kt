@@ -13,27 +13,17 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
 
     private lateinit var onInputListener: OnInputListener
 
-    private val gameLiveData: MutableLiveData<Game> by lazy {
-        MutableLiveData<Game>()
-    }
+    private val gameLiveData: MutableLiveData<Game> by lazy { MutableLiveData<Game>() }
 
-    val bitSets: LiveData<List<BitSet>> = Transformations.map(gameLiveData) {
-        game -> game.board.lines
-    }
+    val bitSets: LiveData<List<BitSet>> = Transformations.map(gameLiveData) { game -> game.board.lines }
 
-    val nextContent: MutableLiveData<List<BitSet>> by lazy {
-        MutableLiveData<List<BitSet>>()
-    }
+    val nextContent: MutableLiveData<List<BitSet>> by lazy { MutableLiveData<List<BitSet>>() }
 
-    val score = MutableLiveData("0")
+    val score = MutableLiveData<String>().apply { value = "0" }
 
-    val resolutionWidth = MutableLiveData<Int>().apply {
-        value = 10
-    }
+    val resolutionWidth = MutableLiveData<Int>().apply { value = 10 }
 
-    val resolutionHeight = MutableLiveData<Int>().apply {
-        value = 17
-    }
+    val resolutionHeight = MutableLiveData<Int>().apply { value = 17 }
 
     fun startGame()  {
         val width = resolutionWidth.value ?: return
@@ -56,20 +46,12 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         gameLiveData.postValue(game)
     }
 
-    fun leftClicked() {
-        onInputListener.moveTetraminoLeft()
-    }
+    fun leftClicked() { onInputListener.moveTetraminoLeft() }
 
-    fun rightClicked() {
-        onInputListener.moveTetraminoRight()
-    }
+    fun rightClicked() { onInputListener.moveTetraminoRight() }
 
-    fun upClicked() {
-        onInputListener.rotateTetraminoClockwise()
-    }
+    fun upClicked() { onInputListener.rotateTetraminoClockwise() }
 
-    fun downClicked() {
-        onInputListener.moveTetraminoDown()
-    }
+    fun downClicked() { onInputListener.moveTetraminoDown() }
 
  }
