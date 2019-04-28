@@ -10,7 +10,6 @@ import io.schiar.giovani.motetris.model.Resolution
 import io.schiar.giovani.motetris.model.TetraminoTypes
 import io.schiar.giovani.motetris.model.TetraminoTypes.*
 import io.schiar.giovani.motetris.util.ColorBit
-import java.util.*
 
 class GameViewModel : ViewModel(), OnChangeGameListener {
 
@@ -18,11 +17,9 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
 
     private val gameLiveData: MutableLiveData<Game> by lazy { MutableLiveData<Game>() }
 
-    val colorBitSets: LiveData<List<Set<ColorBit>>> = Transformations.map(gameLiveData) {
-        game -> game.board.lines.map { it.toSet() }
-    }
+    val colorBitSets: LiveData<List<Set<ColorBit>>> = Transformations.map(gameLiveData) { game -> game.board.lines }
 
-    val nextContent: MutableLiveData<List<BitSet>> by lazy { MutableLiveData<List<BitSet>>() }
+    val nextContent: MutableLiveData<List<Set<ColorBit>>> by lazy { MutableLiveData<List<Set<ColorBit>>>() }
 
     val score = MutableLiveData<String>().apply { value = "0" }
 
@@ -49,7 +46,7 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         Thread(game).start()
     }
 
-    override fun updateNextTetramino(nextTetramino: List<BitSet>) {
+    override fun updateNextTetramino(nextTetramino: List<Set<ColorBit>>) {
         this.nextContent.postValue(nextTetramino)
     }
 

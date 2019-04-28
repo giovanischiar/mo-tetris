@@ -1,7 +1,5 @@
 package io.schiar.giovani.motetris.util
 
-import java.util.*
-
 operator fun MutableSet<ColorBit>.get(i: Int): ColorBit? {
     val indexSorted = this.filter { it.getIndex() == i }
     if (indexSorted.isNotEmpty()) {
@@ -76,34 +74,3 @@ fun MutableSet<ColorBit>.nextClearBit(index: Int = 0): Int {
     }
     return colorBitsOrdered.last()+1
 }
-
-operator fun BitSet.times(other: BitSet): BitSet {
-    val newB1 = BitSet()
-    newB1.or(this)
-    newB1.and(other)
-    return newB1
-}
-
-fun BitSet.orWithOffset(other: BitSet, offset: Int = 0) {
-    if (offset < 0) {
-        return
-    }
-    val newB1 = BitSet()
-    for(i in 0 until other.length()) {
-        newB1.set(i+offset, other[i])
-    }
-    or(newB1)
-}
-
-fun BitSet.xorWithOffset(other: BitSet, offset: Int = 0) {
-    if (offset < 0) {
-        return
-    }
-    val newB1 = BitSet()
-    for(i in 0 until other.length()) {
-        newB1.set(i+offset, other[i])
-    }
-    xor(newB1)
-}
-
-fun <E> Iterable<E>.updated(index: Int, elem: E) = mapIndexed { i, existing ->  if (i == index) elem else existing }

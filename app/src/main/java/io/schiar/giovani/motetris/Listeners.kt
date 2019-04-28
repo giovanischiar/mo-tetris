@@ -1,11 +1,11 @@
 package io.schiar.giovani.motetris
 
 import io.schiar.giovani.motetris.model.Game
-import java.util.*
+import io.schiar.giovani.motetris.util.ColorBit
 
 interface OnChangeGameListener {
     fun updateGameState(game: Game)
-    fun updateNextTetramino(nextTetramino: List<BitSet>)
+    fun updateNextTetramino(nextTetramino: List<Set<ColorBit>>)
     fun updateScore(score: String)
 }
 

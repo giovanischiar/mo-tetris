@@ -74,7 +74,7 @@ class Game(
             generateNewTetramino()
         }
         onChangeGameListener.updateGameState(this)
-        // onChangeGameListener.updateNextTetramino(tetraminoFetcher.next().shape)
+        onChangeGameListener.updateNextTetramino(tetraminoFetcher.next().shape)
     }
 
     private fun removeTetraminoOnLastPosition() {
