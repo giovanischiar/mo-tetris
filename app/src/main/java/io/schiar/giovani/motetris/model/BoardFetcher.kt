@@ -5,5 +5,4 @@ class BoardFetcher {
     fun fetch(resolution: Resolution): Board {
         return Board(resolution)
     }
-
 }

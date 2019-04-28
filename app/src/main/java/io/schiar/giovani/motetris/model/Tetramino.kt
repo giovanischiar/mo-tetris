@@ -1,13 +1,13 @@
 package io.schiar.giovani.motetris.model
 
 import io.schiar.giovani.motetris.model.TetraminoTypes.*
-import java.util.*
+import io.schiar.giovani.motetris.util.ColorBit
 
-class Tetramino(type: TetraminoTypes) {
+class Tetramino(val type: TetraminoTypes, private val color: Int) {
 
     companion object { const val TETRAMINO_BLOCK_QTD = 4 }
 
-    var shape = listOf<BitSet>()
+    var shape = listOf<MutableSet<ColorBit>>()
 
     init {
         when(type) {
@@ -21,9 +21,9 @@ class Tetramino(type: TetraminoTypes) {
 
     fun width(): Int {
         var width = 0
-        for (bitSet in shape) {
-            if (bitSet.length() > width) {
-                width = bitSet.length()
+        for (colorBitSet in shape) {
+            if (colorBitSet.size > width) {
+                width = colorBitSet.size
             }
         }
         return width
@@ -33,9 +33,9 @@ class Tetramino(type: TetraminoTypes) {
         var i = 0
         while(true) {
             if (i == TETRAMINO_BLOCK_QTD) break
-            val bitSet = BitSet(TETRAMINO_BLOCK_QTD)
-            bitSet.set(0)
-            shape = listOf(*(shape.toTypedArray()), bitSet)
+            val colorBitSet = mutableSetOf<ColorBit>()
+            colorBitSet.add(ColorBit(0, color))
+            shape = listOf(*(shape.toTypedArray()), colorBitSet)
             i++
         }
     }
@@ -44,12 +44,12 @@ class Tetramino(type: TetraminoTypes) {
         var i = 0
         while(true) {
             if (i == TETRAMINO_BLOCK_QTD-1) break
-            val bitSet = BitSet(TETRAMINO_BLOCK_QTD)
-            bitSet.set(0)
+            val colorBitSet = mutableSetOf<ColorBit>()
+            colorBitSet.add(ColorBit(0, color))
             if (i == 2) {
-                bitSet.set(1)
+                colorBitSet.add(ColorBit(1, color))
             }
-            shape = listOf(*(shape.toTypedArray()), bitSet)
+            shape = listOf(*(shape.toTypedArray()), colorBitSet)
             i++
         }
     }
@@ -58,12 +58,12 @@ class Tetramino(type: TetraminoTypes) {
         var i = 0
         while(true) {
             if (i == TETRAMINO_BLOCK_QTD-2) break
-            val bitSet = BitSet(TETRAMINO_BLOCK_QTD)
+            val colorBitSet = mutableSetOf<ColorBit>()
             if (i == 0 || i == 1) {
-                bitSet.set(0)
-                bitSet.set(1)
+                colorBitSet.add(ColorBit(0, color))
+                colorBitSet.add(ColorBit(1, color))
             }
-            shape = listOf(*(shape.toTypedArray()), bitSet)
+            shape = listOf(*(shape.toTypedArray()), colorBitSet)
             i++
         }
     }
@@ -72,16 +72,16 @@ class Tetramino(type: TetraminoTypes) {
         var i = 0
         while(true) {
             if (i == TETRAMINO_BLOCK_QTD-1) break
-            val bitSet = BitSet(TETRAMINO_BLOCK_QTD)
+            val colorBitSet = mutableSetOf<ColorBit>()
             when (i) {
-                0 -> bitSet.set(0)
+                0 -> colorBitSet.add(ColorBit(i, color))
                 1 -> {
-                    bitSet.set(0)
-                    bitSet.set(1)
+                    colorBitSet.add(ColorBit(0, color))
+                    colorBitSet.add(ColorBit(1, color))
                 }
-                2 -> bitSet.set(1)
+                2 -> colorBitSet.add(ColorBit(1, color))
             }
-            shape = listOf(*(shape.toTypedArray()), bitSet)
+            shape = listOf(*(shape.toTypedArray()), colorBitSet)
             i++
         }
     }
@@ -90,15 +90,15 @@ class Tetramino(type: TetraminoTypes) {
         var i = 0
         while(true) {
             if (i == TETRAMINO_BLOCK_QTD-2) break
-            val bitSet = BitSet(TETRAMINO_BLOCK_QTD)
+            val colorBitSet = mutableSetOf<ColorBit>()
             if (i == 0) {
-                bitSet.set(0)
-                bitSet.set(1)
-                bitSet.set(2)
+                colorBitSet.add(ColorBit(0, color))
+                colorBitSet.add(ColorBit(1, color))
+                colorBitSet.add(ColorBit(2, color))
             } else if (i == 1) {
-                bitSet.set(1)
+                colorBitSet.add(ColorBit(1, color))
             }
-            shape = listOf(*(shape.toTypedArray()), bitSet)
+            shape = listOf(*(shape.toTypedArray()), colorBitSet)
             i++
         }
     }

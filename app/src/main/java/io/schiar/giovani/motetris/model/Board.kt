@@ -1,41 +1,59 @@
 package io.schiar.giovani.motetris.model
 
-import io.schiar.giovani.motetris.orWithOffset
-import io.schiar.giovani.motetris.times
-import io.schiar.giovani.motetris.xorWithOffset
-import java.util.*
+import io.schiar.giovani.motetris.util.*
 
 class Board(private val resolution: Resolution) {
 
-    var lines: List<BitSet>
+    var lines: List<MutableSet<ColorBit>>
     var linesRemoved = 0
 
     init {
         lines = listOf()
         for (i in 0 until resolution.height) {
-            val bitSet = BitSet()
+            val bitSet = mutableSetOf<ColorBit>()
             lines = listOf(bitSet, *(lines.toTypedArray()))
         }
+    }
+
+    fun addColorBitsOnBoard(colorBits: List<MutableSet<ColorBit>>, position: Position) {
+        var newY = position.y
+        for (colorBit in colorBits) {
+            lines[newY].mergeWithOffset(colorBit, position.x)
+            newY++
+        }
+    }
+
+    fun remColorBitsOnBoard(bitSets: List<MutableSet<ColorBit>>, position: Position): Boolean {
+        var newY = position.y
+        for (bitSet in bitSets) {
+            lines[newY].unMergeWithOffset(bitSet, position.x)
+            newY++
+        }
+        return true
     }
 
     fun removeFullLinesAndUpdateBoard(): Boolean {
         var linesWasRemoved = false
         for ((i, bitSet) in lines.withIndex()) {
-            if (bitSet.nextClearBit(0) >= resolution.width) {
-                lines = listOf(
-                    BitSet(),
-                    *(lines.subList(0, i).toTypedArray()),
-                    *(lines.subList(i+1, lines.size)).toTypedArray()
-                )
-                linesRemoved++
+            if (bitSet.nextClearBit() >= resolution.width) {
+                removeFullLine(i)
                 linesWasRemoved = true
             }
         }
         return linesWasRemoved
     }
 
-    fun verifyBitSetsCollision(bitSets: List<BitSet>, nextPosition: Position): Boolean {
-        if (resolution.height < (nextPosition.y + bitSets.size)) {
+    private fun removeFullLine(i: Int) {
+        lines = listOf(
+            mutableSetOf(),
+            *(lines.subList(0, i).toTypedArray()),
+            *(lines.subList(i+1, lines.size)).toTypedArray()
+        )
+        linesRemoved++
+    }
+
+    fun verifyColorBitSetsCollision(colorBitSets: List<MutableSet<ColorBit>>, nextPosition: Position): Boolean {
+        if (resolution.height < (nextPosition.y + colorBitSets.size)) {
             return true
         }
 
@@ -44,35 +62,18 @@ class Board(private val resolution: Resolution) {
         }
 
         var nextY = nextPosition.y
-        for (bitSet in bitSets) {
-            if (resolution.width < (nextPosition.x + bitSet.length())) {
+        for (colorBitSet in colorBitSets) {
+            if (resolution.width < (nextPosition.x + colorBitSet.size)) {
                 return true
             }
-            val newLine = BitSet()
-            newLine.orWithOffset(bitSet, nextPosition.x)
-            if (!(lines[nextY] * newLine).isEmpty) {
+            val newLine = mutableSetOf<ColorBit>()
+            newLine.mergeWithOffset(colorBitSet, nextPosition.x)
+            if (lines[nextY].intersects(newLine)) {
                 return true
             }
             nextY++
         }
         return false
-    }
-
-    fun remBitSetsOnBoard(bitSets: List<BitSet>, position: Position): Boolean {
-        var newY = position.y
-        for (bitSet in bitSets) {
-            lines[newY].xorWithOffset(bitSet, position.x)
-            newY++
-        }
-        return true
-    }
-
-    fun addBitSetsOnBoard(bitSets: List<BitSet>, position: Position) {
-        var newY = position.y
-        for (bitSet in bitSets) {
-            lines[newY].orWithOffset(bitSet, position.x)
-            newY++
-        }
     }
 
 }

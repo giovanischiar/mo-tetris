@@ -2,7 +2,7 @@ package io.schiar.giovani.motetris.model
 
 import java.util.*
 
-class TetraminoFetcher {
+class TetraminoFetcher(private val tetraminoColors: Map<TetraminoTypes, Int>) {
 
     private val types = TetraminoTypes.values().toList()
     private val buffer: LinkedList<TetraminoTypes> = LinkedList()
@@ -15,11 +15,11 @@ class TetraminoFetcher {
     fun nextTetramino(): Tetramino {
         val tetramino = buffer.pollLast()
         buffer.addFirst(types.shuffled().first())
-        return Tetramino(tetramino)
+        return Tetramino(tetramino, tetraminoColors[tetramino] ?: 0)
     }
 
-    fun next(): TetraminoTypes {
-        return buffer.last
+    fun next(): Tetramino {
+        return Tetramino(buffer.last, tetraminoColors[buffer.last] ?: 0)
     }
 
 }

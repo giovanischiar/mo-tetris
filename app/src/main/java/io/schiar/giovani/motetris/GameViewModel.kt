@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel
 import io.schiar.giovani.motetris.model.Game
 import io.schiar.giovani.motetris.model.Position
 import io.schiar.giovani.motetris.model.Resolution
+import io.schiar.giovani.motetris.model.TetraminoTypes
+import io.schiar.giovani.motetris.model.TetraminoTypes.*
+import io.schiar.giovani.motetris.util.ColorBit
 import java.util.*
 
 class GameViewModel : ViewModel(), OnChangeGameListener {
@@ -15,7 +18,9 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
 
     private val gameLiveData: MutableLiveData<Game> by lazy { MutableLiveData<Game>() }
 
-    val bitSets: LiveData<List<BitSet>> = Transformations.map(gameLiveData) { game -> game.board.lines }
+    val colorBitSets: LiveData<List<Set<ColorBit>>> = Transformations.map(gameLiveData) {
+        game -> game.board.lines.map { it.toSet() }
+    }
 
     val nextContent: MutableLiveData<List<BitSet>> by lazy { MutableLiveData<List<BitSet>>() }
 
@@ -25,10 +30,20 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
 
     val resolutionHeight = MutableLiveData<Int>().apply { value = 17 }
 
+    private val tetraminoColors = MutableLiveData<Map<TetraminoTypes, Int>>().apply { value = mapOf(
+        I to 0xF44366, L to 0x9C27B0,
+        O to 0x2196F3, S to 0x4CAF50,
+        T to 0xFFEB3B
+    ) }
+
     fun startGame()  {
         val width = resolutionWidth.value ?: return
         val height = resolutionHeight.value ?: return
-        val game = Game(Resolution(width, height), Position((width/2)-1, 0), this)
+        val tetraminoColors = tetraminoColors.value ?: return
+
+        val resolution = Resolution(width, height)
+        val sourcePosition = Position((width/2)-1, 0)
+        val game = Game(resolution, tetraminoColors, sourcePosition, this)
         game.addTetraminoOnBoard()
         onInputListener = game
         Thread(game).start()

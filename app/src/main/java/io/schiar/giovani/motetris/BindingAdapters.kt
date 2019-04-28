@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import java.util.*
+import io.schiar.giovani.motetris.util.ColorBit
 import kotlin.math.ceil
 
 object BindingAdapters {
@@ -36,26 +36,28 @@ object BindingAdapters {
         view.layoutParams = paintAreaParams
     }
 
-    @BindingAdapter("bit_sets")
+    @BindingAdapter("color_bit_sets")
     @JvmStatic
-    fun setBitSets(layout: RelativeLayout, optBitSets: List<BitSet>?) {
-        val bitSets = optBitSets ?: return
+    fun setColorBitSets(layout: RelativeLayout, optColorBitSets: List<Set<ColorBit>>?) {
+        val colorBitSets = optColorBitSets ?: return
         val pixelSize = ceil(layout.resources.getDimension(R.dimen.blockSize)).toInt()
         layout.removeAllViews()
-        for ((i, bitSet) in bitSets.withIndex()) {
-            for (j in (0..bitSet.length())) {
-                if (bitSet[j]) {
-                    val block = LayoutInflater.from(layout.context).inflate(R.layout.block, layout, false)
-                    layout.addView(block)
-                    val blockParams = block.layoutParams as RelativeLayout.LayoutParams
-                    blockParams.apply {
-                        leftMargin = pixelSize * j
-                        topMargin = pixelSize * i
-                        width = pixelSize
-                        height = pixelSize
-                    }
-                    block.layoutParams = blockParams
+        for ((y, lineColorBitSet) in colorBitSets.withIndex()) {
+            val colorBitIterator = lineColorBitSet.iterator()
+            while (colorBitIterator.hasNext()) {
+                val colorBit = colorBitIterator.next()
+                val x = colorBit.getIndex()
+                val block = LayoutInflater.from(layout.context).inflate(R.layout.block, layout, false)
+                layout.addView(block)
+                val blockParams = block.layoutParams as RelativeLayout.LayoutParams
+                blockParams.apply {
+                    leftMargin = pixelSize * x
+                    topMargin = pixelSize * y
+                    width = pixelSize
+                    height = pixelSize
                 }
+                block.setBackgroundColor(colorBit.getColor())
+                block.layoutParams = blockParams
             }
         }
     }

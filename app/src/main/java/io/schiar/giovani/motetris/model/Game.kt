@@ -5,13 +5,14 @@ import io.schiar.giovani.motetris.OnInputListener
 
 class Game(
     resolution: Resolution,
+    tetraminoColors: Map<TetraminoTypes, Int>,
     private val sourcePosition: Position,
     private val onChangeGameListener: OnChangeGameListener
 ): Runnable, OnInputListener {
 
     val board: Board = BoardFetcher().fetch(resolution)
 
-    private val tetraminoFetcher = TetraminoFetcher()
+    private val tetraminoFetcher = TetraminoFetcher(tetraminoColors)
     private var currentTetramino = tetraminoFetcher.nextTetramino()
     private var currentTetraminoPosition = sourcePosition
     private var lastTetraminoPosition = sourcePosition
@@ -56,7 +57,7 @@ class Game(
         lastTetraminoPosition = currentTetraminoPosition
         removeTetraminoOnLastPosition()
         currentTetramino.shape = TetraminoFlipper(currentTetramino).rotateClockWise()
-        if (board.verifyBitSetsCollision(currentTetramino.shape, currentTetraminoPosition)) {
+        if (board.verifyColorBitSetsCollision(currentTetramino.shape, currentTetraminoPosition)) {
             currentTetramino.shape = TetraminoFlipper(currentTetramino).rotateAntiClockWise()
         }
         addTetraminoOnBoard()
@@ -65,7 +66,7 @@ class Game(
 
     private fun updateCurrentTetraminoPosition(sideUpdating: Boolean = false) {
         removeTetraminoOnLastPosition()
-        val collides = board.verifyBitSetsCollision(currentTetramino.shape, currentTetraminoPosition)
+        val collides = board.verifyColorBitSetsCollision(currentTetramino.shape, currentTetraminoPosition)
         addTetraminoOnBoard(collides)
         if (collides && !sideUpdating) {
             board.removeFullLinesAndUpdateBoard()
@@ -73,11 +74,12 @@ class Game(
             generateNewTetramino()
         }
         onChangeGameListener.updateGameState(this)
-        onChangeGameListener.updateNextTetramino(Tetramino(tetraminoFetcher.next()).shape)
+        // onChangeGameListener.updateNextTetramino(tetraminoFetcher.next().shape)
     }
 
     private fun removeTetraminoOnLastPosition() {
-        board.remBitSetsOnBoard(currentTetramino.shape, lastTetraminoPosition)
+        val tetramino = currentTetramino
+        board.remColorBitsOnBoard(tetramino.shape, lastTetraminoPosition)
     }
 
     fun addTetraminoOnBoard(collides: Boolean = false) {
@@ -85,7 +87,8 @@ class Game(
             currentTetraminoPosition = lastTetraminoPosition
         }
 
-        board.addBitSetsOnBoard(currentTetramino.shape, currentTetraminoPosition)
+        val tetramino = currentTetramino
+        board.addColorBitsOnBoard(tetramino.shape, currentTetraminoPosition)
     }
 
 }
