@@ -6,7 +6,7 @@ import io.schiar.giovani.motetris.util.set
 
 class TetraminoFlipper(private val tetramino: Tetramino) {
 
-    fun rotateAntiClockWise(): List<MutableSet<ColorBit>> {
+    fun rotateAntiClockWise(): List<Set<ColorBit>> {
         val matrix = tetramino.shape
         val width = matrix.size
         val height = tetramino.width()
@@ -23,7 +23,7 @@ class TetraminoFlipper(private val tetramino: Tetramino) {
         return ret
     }
 
-    fun rotateClockWise(): List<MutableSet<ColorBit>> {
+    fun rotateClockWise(): List<Set<ColorBit>> {
         val matrix = tetramino.shape
         val width = matrix.size
         val height = tetramino.width()

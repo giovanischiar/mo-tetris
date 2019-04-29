@@ -7,7 +7,7 @@ class Tetramino(type: TetraminoTypes, private val color: Int) {
 
     companion object { const val TETRAMINO_BLOCK_QTD = 4 }
 
-    var shape = listOf<MutableSet<ColorBit>>()
+    var shape = listOf<Set<ColorBit>>()
 
     init {
         when(type) {

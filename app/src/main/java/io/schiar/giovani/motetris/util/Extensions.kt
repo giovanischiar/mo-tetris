@@ -1,6 +1,6 @@
 package io.schiar.giovani.motetris.util
 
-operator fun MutableSet<ColorBit>.get(i: Int): ColorBit? {
+operator fun Set<ColorBit>.get(i: Int): ColorBit? {
     val indexSorted = this.filter { it.getIndex() == i }
     if (indexSorted.isNotEmpty()) {
         return indexSorted[0]
@@ -19,7 +19,7 @@ operator fun MutableSet<ColorBit>.set(i: Int, colorBit: ColorBit) {
     this.add(newColorBit)
 }
 
-fun MutableSet<ColorBit>.mergeWithOffset(other: MutableSet<ColorBit>, offset: Int = 0) {
+fun MutableSet<ColorBit>.mergeWithOffset(other: Set<ColorBit>, offset: Int = 0) {
     if (offset < 0) {
         return
     }
@@ -35,7 +35,7 @@ fun MutableSet<ColorBit>.mergeWithOffset(other: MutableSet<ColorBit>, offset: In
     }
 }
 
-fun MutableSet<ColorBit>.unMergeWithOffset(other: MutableSet<ColorBit>, offset: Int = 0) {
+fun MutableSet<ColorBit>.unMergeWithOffset(other: Set<ColorBit>, offset: Int = 0) {
     if (offset < 0) {
         return
     }
@@ -50,7 +50,7 @@ fun MutableSet<ColorBit>.unMergeWithOffset(other: MutableSet<ColorBit>, offset: 
     }
 }
 
-fun MutableSet<ColorBit>.intersects(other: MutableSet<ColorBit>):Boolean {
+fun Set<ColorBit>.intersects(other: Set<ColorBit>):Boolean {
     for (otherColorBit in other) {
         val colorBitsSameIndex = this.filter { it.getIndex() == otherColorBit.getIndex() }
         if (colorBitsSameIndex.isNotEmpty()) {
@@ -61,7 +61,7 @@ fun MutableSet<ColorBit>.intersects(other: MutableSet<ColorBit>):Boolean {
     return false
 }
 
-fun MutableSet<ColorBit>.nextClearBit(index: Int = 0): Int {
+fun Set<ColorBit>.nextClearBit(index: Int = 0): Int {
     val colorBitsOrdered = this.map { it.getIndex() }.sorted()
     if (colorBitsOrdered.isEmpty()) {
         return index
