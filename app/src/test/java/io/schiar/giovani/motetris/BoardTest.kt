@@ -9,6 +9,7 @@ import junit.framework.Assert.assertEquals
 import org.junit.Test
 
 class BoardTest {
+
     @Test
     fun addColorBitsOnBoardTest() {
         val board = Board(Resolution(4, 4))
@@ -22,4 +23,5 @@ class BoardTest {
         assertEquals(1, board.lines[2][1]?.getIndex())
         assertEquals(2, board.lines[2][2]?.getIndex())
     }
+
 }
