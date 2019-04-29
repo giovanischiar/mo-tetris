@@ -1,6 +1,5 @@
 package io.schiar.giovani.motetris.model
 
-import android.util.Log
 import io.schiar.giovani.motetris.util.*
 
 class Board(val resolution: Resolution) {
@@ -21,7 +20,6 @@ class Board(val resolution: Resolution) {
     }
 
     fun addColorBitsOnBoard(colorBits: List<MutableSet<ColorBit>>, position: Position) {
-        Log.d("motetris thread", "addColorBitsOnBoard init ${Thread.currentThread().name}")
         var newY = position.y
         for (colorBit in colorBits) {
             val newLine = mutableSetOf<ColorBit>()
@@ -31,7 +29,6 @@ class Board(val resolution: Resolution) {
             // lines[newY].mergeWithOffset(colorBit, position.x)
             newY++
         }
-        Log.d("motetris thread", "addColorBitsOnBoard end ${Thread.currentThread().name}")
     }
 
     fun remColorBitsOnBoard(bitSets: List<MutableSet<ColorBit>>, position: Position): Boolean {
