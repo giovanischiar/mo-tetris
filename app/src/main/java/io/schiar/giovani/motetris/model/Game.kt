@@ -22,7 +22,7 @@ class Game(
         while (!Thread.currentThread().isInterrupted) {
             try {
                 moveTetraminoDown()
-                Thread.sleep(50)
+                Thread.sleep(1000)
             } catch (ex: InterruptedException) {
                 Thread.currentThread().interrupt()
             }
