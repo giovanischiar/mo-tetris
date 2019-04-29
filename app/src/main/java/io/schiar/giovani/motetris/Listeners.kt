@@ -7,6 +7,7 @@ interface OnChangeGameListener {
     fun updateGameState(game: Game)
     fun updateNextTetramino(nextTetramino: List<Set<ColorBit>>)
     fun updateScore(score: String)
+    fun updateResolutions(width: Int, height: Int)
 }
 
 interface OnInputListener {

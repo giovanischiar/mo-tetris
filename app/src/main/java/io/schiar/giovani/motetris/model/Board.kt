@@ -1,8 +1,9 @@
 package io.schiar.giovani.motetris.model
 
+import android.util.Log
 import io.schiar.giovani.motetris.util.*
 
-class Board(private val resolution: Resolution) {
+class Board(val resolution: Resolution) {
 
     var lines: List<MutableSet<ColorBit>>
     var linesRemoved = 0
@@ -15,18 +16,32 @@ class Board(private val resolution: Resolution) {
         }
     }
 
+    constructor(intMatrix: Array<Array<Int>>): this(Resolution(intMatrix[0].size, intMatrix.size)) {
+        lines = intMatrix.toListColorBitSet()
+    }
+
     fun addColorBitsOnBoard(colorBits: List<MutableSet<ColorBit>>, position: Position) {
+        Log.d("motetris thread", "addColorBitsOnBoard init ${Thread.currentThread().name}")
         var newY = position.y
         for (colorBit in colorBits) {
-            lines[newY].mergeWithOffset(colorBit, position.x)
+            val newLine = mutableSetOf<ColorBit>()
+            newLine.mergeWithOffset(lines[newY])
+            newLine.mergeWithOffset(colorBit, position.x)
+            addLine(newY, newLine)
+            // lines[newY].mergeWithOffset(colorBit, position.x)
             newY++
         }
+        Log.d("motetris thread", "addColorBitsOnBoard end ${Thread.currentThread().name}")
     }
 
     fun remColorBitsOnBoard(bitSets: List<MutableSet<ColorBit>>, position: Position): Boolean {
         var newY = position.y
         for (bitSet in bitSets) {
-            lines[newY].unMergeWithOffset(bitSet, position.x)
+            val newLine = mutableSetOf<ColorBit>()
+            newLine.mergeWithOffset(lines[newY])
+            newLine.unMergeWithOffset(bitSet, position.x)
+            addLine(newY, newLine)
+            // lines[newY].unMergeWithOffset(bitSet, position.x)
             newY++
         }
         return true
@@ -50,6 +65,14 @@ class Board(private val resolution: Resolution) {
             *(lines.subList(i+1, lines.size)).toTypedArray()
         )
         linesRemoved++
+    }
+
+    private fun addLine(i: Int, line: MutableSet<ColorBit>) {
+        lines = listOf(
+            *(lines.subList(0, i).toTypedArray()),
+            line,
+            *(lines.subList(i+1, lines.size)).toTypedArray()
+        )
     }
 
     fun verifyColorBitSetsCollision(colorBitSets: List<MutableSet<ColorBit>>, nextPosition: Position): Boolean {

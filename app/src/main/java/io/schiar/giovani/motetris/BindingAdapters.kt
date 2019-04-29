@@ -1,5 +1,6 @@
 package io.schiar.giovani.motetris
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
@@ -39,6 +40,7 @@ object BindingAdapters {
     @BindingAdapter("color_bit_sets")
     @JvmStatic
     fun setColorBitSets(layout: RelativeLayout, optColorBitSets: List<Set<ColorBit>>?) {
+        Log.d("motetris thread", "setColorBitSets init ${Thread.currentThread().name}")
         val colorBitSets = optColorBitSets ?: return
         val pixelSize = ceil(layout.resources.getDimension(R.dimen.blockSize)).toInt()
         layout.removeAllViews()
@@ -60,6 +62,7 @@ object BindingAdapters {
                 block.layoutParams = blockParams
             }
         }
+        Log.d("motetris thread", "setColorBitSets end ${Thread.currentThread().name}")
     }
 
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import io.schiar.giovani.motetris.model.Game
-import io.schiar.giovani.motetris.model.Position
 import io.schiar.giovani.motetris.model.Resolution
 import io.schiar.giovani.motetris.model.TetraminoTypes
 import io.schiar.giovani.motetris.model.TetraminoTypes.*
@@ -39,8 +38,7 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         val tetraminoColors = tetraminoColors.value ?: return
 
         val resolution = Resolution(width, height)
-        val sourcePosition = Position((width/2)-1, 0)
-        val game = Game(resolution, tetraminoColors, sourcePosition, this)
+        val game = Game(resolution, tetraminoColors, this)
         game.addTetraminoOnBoard()
         onInputListener = game
         Thread(game).start()
@@ -56,6 +54,11 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
 
     override fun updateGameState(game: Game) {
         gameLiveData.postValue(game)
+    }
+
+    override fun updateResolutions(width: Int, height: Int) {
+        resolutionWidth.postValue(width)
+        resolutionHeight.postValue(height)
     }
 
     fun leftClicked() { onInputListener.moveTetraminoLeft() }

@@ -19,7 +19,6 @@ operator fun MutableSet<ColorBit>.set(i: Int, colorBit: ColorBit) {
     this.add(newColorBit)
 }
 
-
 fun MutableSet<ColorBit>.mergeWithOffset(other: MutableSet<ColorBit>, offset: Int = 0) {
     if (offset < 0) {
         return
@@ -73,4 +72,17 @@ fun MutableSet<ColorBit>.nextClearBit(index: Int = 0): Int {
         }
     }
     return colorBitsOrdered.last()+1
+}
+
+fun Array<Array<Int>>.toListColorBitSet(): List<MutableSet<ColorBit>> {
+    this.reverse()
+    var listColorBitSet = listOf<MutableSet<ColorBit>>()
+    val height = this.size
+    for (i in 0 until height) {
+        val colorBitSet = this[i].mapIndexed{ j, int ->
+            ColorBit(if (int != 0) j else -1, 0x7FFFFF00)
+        }.filter { it.getIndex() != -1 }.toHashSet()
+        listColorBitSet = listOf(colorBitSet, *(listColorBitSet.toTypedArray()))
+    }
+    return listColorBitSet
 }

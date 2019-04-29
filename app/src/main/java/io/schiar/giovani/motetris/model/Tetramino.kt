@@ -3,7 +3,7 @@ package io.schiar.giovani.motetris.model
 import io.schiar.giovani.motetris.model.TetraminoTypes.*
 import io.schiar.giovani.motetris.util.ColorBit
 
-class Tetramino(val type: TetraminoTypes, private val color: Int) {
+class Tetramino(type: TetraminoTypes, private val color: Int) {
 
     companion object { const val TETRAMINO_BLOCK_QTD = 4 }
 

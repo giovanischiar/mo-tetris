@@ -6,22 +6,23 @@ import io.schiar.giovani.motetris.OnInputListener
 class Game(
     resolution: Resolution,
     tetraminoColors: Map<TetraminoTypes, Int>,
-    private val sourcePosition: Position,
     private val onChangeGameListener: OnChangeGameListener
 ): Runnable, OnInputListener {
 
     val board: Board = BoardFetcher().fetch(resolution)
-
+    private val sourcePosition = Position((board.resolution.width/2)-1, 0)
     private val tetraminoFetcher = TetraminoFetcher(tetraminoColors)
     private var currentTetramino = tetraminoFetcher.nextTetramino()
     private var currentTetraminoPosition = sourcePosition
     private var lastTetraminoPosition = sourcePosition
 
     override fun run() {
+        val ( width, height ) = board.resolution
+        onChangeGameListener.updateResolutions(width, height)
         while (!Thread.currentThread().isInterrupted) {
             try {
                 moveTetraminoDown()
-                Thread.sleep(1000)
+                Thread.sleep(50)
             } catch (ex: InterruptedException) {
                 Thread.currentThread().interrupt()
             }
