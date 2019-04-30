@@ -36,6 +36,7 @@ class Board(val resolution: Resolution, private val onBoardChangeListener: OnBoa
     fun remColorBitsOnBoard(colorBitSets: List<Set<ColorBit>>, position: Position): Boolean {
         var newY = position.y
         for (bitSet in colorBitSets) {
+            if (newY < 0) continue
             val newLine = mutableSetOf<ColorBit>()
             newLine.mergeWithOffset(lines[newY])
             newLine.unMergeWithOffset(bitSet, position.x)
@@ -86,9 +87,11 @@ class Board(val resolution: Resolution, private val onBoardChangeListener: OnBoa
 
         var nextY = nextPosition.y
         for (colorBitSet in colorBitSets) {
+            if (nextY < 0) continue
             if (resolution.width < (nextPosition.x + colorBitSet.size)) {
                 return true
             }
+
             val newLine = mutableSetOf<ColorBit>()
             newLine.mergeWithOffset(colorBitSet, nextPosition.x)
             if (lines[nextY].intersects(newLine)) {
