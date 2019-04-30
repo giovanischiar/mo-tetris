@@ -12,7 +12,12 @@ class BoardTest {
 
     @Test
     fun addColorBitsOnBoardTest() {
-        val board = Board(Resolution(4, 4))
+        val board = Board(Resolution(4, 4), object: OnBoardChangeListener {
+            override fun onBoardChange() {
+
+            }
+
+        })
         val line = mutableSetOf(ColorBit(0, 0), ColorBit(1, 0))
 
         board.addColorBitsOnBoard(listOf(line, line), Position(1, 1))
