@@ -31,6 +31,7 @@ class Board(val resolution: Resolution, private val onBoardChangeListener: OnBoa
             addLine(newY, newLine)
             newY++
         }
+        onBoardChangeListener.onBoardChange()
     }
 
     fun remColorBitsOnBoard(colorBitSets: List<Set<ColorBit>>, position: Position): Boolean {
@@ -73,7 +74,6 @@ class Board(val resolution: Resolution, private val onBoardChangeListener: OnBoa
             line,
             *(lines.subList(i+1, lines.size)).toTypedArray()
         )
-        onBoardChangeListener.onBoardChange()
     }
 
     fun verifyColorBitSetsCollision(colorBitSets: List<Set<ColorBit>>, nextPosition: Position): Boolean {

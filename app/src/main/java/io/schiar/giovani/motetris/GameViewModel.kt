@@ -12,6 +12,8 @@ import io.schiar.giovani.motetris.util.ColorBit
 
 class GameViewModel : ViewModel(), OnChangeGameListener {
 
+    private lateinit var engine: Engine
+
     private lateinit var onInputListener: OnInputListener
 
     private val gameLiveData: MutableLiveData<Game> by lazy { MutableLiveData<Game>() }
@@ -41,7 +43,8 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         val game = Game(resolution, tetraminoColors, this)
         game.addTetraminoOnBoard()
         onInputListener = game
-        Thread(game).start()
+        engine = Engine(game)
+        engine.start()
     }
 
     override fun updateNextTetramino(nextTetramino: List<Set<ColorBit>>) {
@@ -61,12 +64,28 @@ class GameViewModel : ViewModel(), OnChangeGameListener {
         resolutionHeight.postValue(height)
     }
 
-    fun leftClicked() { onInputListener.moveTetraminoLeft() }
+    fun leftClicked() {
+         engine.runOnEngine {
+             onInputListener.moveTetraminoLeft()
+         }
+    }
 
-    fun rightClicked() { onInputListener.moveTetraminoRight() }
+    fun rightClicked() {
+        engine.runOnEngine {
+            onInputListener.moveTetraminoRight()
+        }
+    }
 
-    fun upClicked() { onInputListener.rotateTetraminoClockwise() }
+    fun upClicked() {
+        engine.runOnEngine {
+            onInputListener.rotateTetraminoClockwise()
+        }
+    }
 
-    fun downClicked() { onInputListener.moveTetraminoDown() }
+    fun downClicked() {
+        engine.runOnEngine {
+            onInputListener.moveTetraminoDown()
+        }
+    }
 
  }

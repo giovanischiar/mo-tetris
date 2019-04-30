@@ -1,8 +1,10 @@
 package io.schiar.giovani.motetris.model
 
+import android.util.Log
 import io.schiar.giovani.motetris.OnBoardChangeListener
 import io.schiar.giovani.motetris.OnChangeGameListener
 import io.schiar.giovani.motetris.OnInputListener
+import io.schiar.giovani.motetris.OnNextStateListener
 
 class Game(
     resolution: Resolution,
@@ -10,6 +12,7 @@ class Game(
     private val onChangeGameListener: OnChangeGameListener
 ): Runnable, OnInputListener, OnBoardChangeListener {
 
+    lateinit var onNextMoveListener: OnNextStateListener
     val board: Board = BoardFetcher().fetch(resolution, this)
     private val sourcePosition = Position((board.resolution.width/2)-1, 0)
     private val tetraminoFetcher = TetraminoFetcher(tetraminoColors)
@@ -17,18 +20,15 @@ class Game(
     private var currentTetraminoPosition = sourcePosition
     private var lastTetraminoPosition = sourcePosition
 
-    override fun run() {
+    init {
         val ( width, height ) = board.resolution
         onChangeGameListener.updateResolutions(width, height)
         onChangeGameListener.updateNextTetramino(tetraminoFetcher.next().shape)
-        while (!Thread.currentThread().isInterrupted) {
-            try {
-                moveTetraminoDown()
-                Thread.sleep(1000)
-            } catch (ex: InterruptedException) {
-                Thread.currentThread().interrupt()
-            }
-        }
+    }
+
+    override fun run() {
+        moveTetraminoDown()
+        onNextMoveListener.nextState()
     }
 
     private fun generateNewTetramino() {
@@ -40,24 +40,28 @@ class Game(
     }
 
     override fun moveTetraminoDown() {
+        Log.d("mo tetris", "moveTetraminoDown ${Thread.currentThread().name}")
         lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x, currentTetraminoPosition.y+1)
         updateCurrentTetraminoPosition()
     }
 
     override fun moveTetraminoLeft() {
+        Log.d("mo tetris", "moveTetraminoLeft ${Thread.currentThread().name}")
         lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x-1, currentTetraminoPosition.y)
         updateCurrentTetraminoPosition(true)
     }
 
     override fun moveTetraminoRight() {
+        Log.d("mo tetris", "moveTetraminoRight ${Thread.currentThread().name}")
         lastTetraminoPosition = currentTetraminoPosition
         currentTetraminoPosition = Position(currentTetraminoPosition.x+1, currentTetraminoPosition.y)
         updateCurrentTetraminoPosition(true)
     }
 
     override fun rotateTetraminoClockwise() {
+        Log.d("mo tetris", "rotateTetraminoClockwise ${Thread.currentThread().name}")
         lastTetraminoPosition = currentTetraminoPosition
         removeTetraminoOnLastPosition()
         currentTetramino.shape = TetraminoFlipper(currentTetramino).rotateClockWise()

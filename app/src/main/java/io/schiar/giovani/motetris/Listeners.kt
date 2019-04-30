@@ -20,3 +20,7 @@ interface OnInputListener {
 interface OnBoardChangeListener {
     fun onBoardChange()
 }
+
+interface OnNextStateListener {
+    fun nextState()
+}
