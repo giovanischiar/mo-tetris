@@ -1,5 +1,6 @@
 package io.schiar.giovani.motetris.model
 
+import io.schiar.giovani.motetris.OnBoardChangeListener
 import io.schiar.giovani.motetris.OnChangeGameListener
 import io.schiar.giovani.motetris.OnInputListener
 
@@ -7,9 +8,9 @@ class Game(
     resolution: Resolution,
     tetraminoColors: Map<TetraminoTypes, Int>,
     private val onChangeGameListener: OnChangeGameListener
-): Runnable, OnInputListener {
+): Runnable, OnInputListener, OnBoardChangeListener {
 
-    val board: Board = BoardFetcher().fetch(resolution)
+    val board: Board = BoardFetcher().fetch(resolution, this)
     private val sourcePosition = Position((board.resolution.width/2)-1, 0)
     private val tetraminoFetcher = TetraminoFetcher(tetraminoColors)
     private var currentTetramino = tetraminoFetcher.nextTetramino()
@@ -19,6 +20,7 @@ class Game(
     override fun run() {
         val ( width, height ) = board.resolution
         onChangeGameListener.updateResolutions(width, height)
+        onChangeGameListener.updateNextTetramino(tetraminoFetcher.next().shape)
         while (!Thread.currentThread().isInterrupted) {
             try {
                 moveTetraminoDown()
@@ -31,6 +33,7 @@ class Game(
 
     private fun generateNewTetramino() {
         currentTetramino = tetraminoFetcher.nextTetramino()
+        onChangeGameListener.updateNextTetramino(tetraminoFetcher.next().shape)
         currentTetraminoPosition = sourcePosition
         lastTetraminoPosition = sourcePosition
         addTetraminoOnBoard()
@@ -62,7 +65,6 @@ class Game(
             currentTetramino.shape = TetraminoFlipper(currentTetramino).rotateAntiClockWise()
         }
         addTetraminoOnBoard()
-        onChangeGameListener.updateGameState(this)
     }
 
     private fun updateCurrentTetraminoPosition(sideUpdating: Boolean = false) {
@@ -71,11 +73,9 @@ class Game(
         addTetraminoOnBoard(collides)
         if (collides && !sideUpdating) {
             board.removeFullLinesAndUpdateBoard()
-            onChangeGameListener.updateScore(board.linesRemoved.toString())
             generateNewTetramino()
+            onChangeGameListener.updateScore(board.linesRemoved.toString())
         }
-        onChangeGameListener.updateGameState(this)
-        onChangeGameListener.updateNextTetramino(tetraminoFetcher.next().shape)
     }
 
     private fun removeTetraminoOnLastPosition() {
@@ -90,6 +90,10 @@ class Game(
 
         val tetramino = currentTetramino
         board.addColorBitsOnBoard(tetramino.shape, currentTetraminoPosition)
+    }
+
+    override fun onBoardChange() {
+        onChangeGameListener.updateGameState(this)
     }
 
 }

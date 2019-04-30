@@ -16,3 +16,7 @@ interface OnInputListener {
     fun moveTetraminoDown()
     fun rotateTetraminoClockwise()
 }
+
+interface OnBoardChangeListener {
+    fun onBoardChange()
+}

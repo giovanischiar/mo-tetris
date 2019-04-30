@@ -1,8 +1,9 @@
 package io.schiar.giovani.motetris.model
 
+import io.schiar.giovani.motetris.OnBoardChangeListener
 import io.schiar.giovani.motetris.util.*
 
-class Board(val resolution: Resolution) {
+class Board(val resolution: Resolution, private val onBoardChangeListener: OnBoardChangeListener) {
 
     var lines: List<Set<ColorBit>>
     var linesRemoved = 0
@@ -15,13 +16,15 @@ class Board(val resolution: Resolution) {
         }
     }
 
-    constructor(intMatrix: Array<Array<Int>>): this(Resolution(intMatrix[0].size, intMatrix.size)) {
+    constructor(intMatrix: Array<Array<Int>>, onBoardChangeListener: OnBoardChangeListener)
+            : this(Resolution(intMatrix[0].size, intMatrix.size), onBoardChangeListener) {
         lines = intMatrix.toListColorBitSet()
     }
 
     fun addColorBitsOnBoard(colorBitSets: List<Set<ColorBit>>, position: Position) {
         var newY = position.y
         for (colorBit in colorBitSets) {
+            if (newY < 0) continue
             val newLine = mutableSetOf<ColorBit>()
             newLine.mergeWithOffset(lines[newY])
             newLine.mergeWithOffset(colorBit, position.x)
@@ -60,6 +63,7 @@ class Board(val resolution: Resolution) {
             *(lines.subList(i+1, lines.size)).toTypedArray()
         )
         linesRemoved++
+        onBoardChangeListener.onBoardChange()
     }
 
     private fun addLine(i: Int, line: Set<ColorBit>) {
@@ -68,6 +72,7 @@ class Board(val resolution: Resolution) {
             line,
             *(lines.subList(i+1, lines.size)).toTypedArray()
         )
+        onBoardChangeListener.onBoardChange()
     }
 
     fun verifyColorBitSetsCollision(colorBitSets: List<Set<ColorBit>>, nextPosition: Position): Boolean {
