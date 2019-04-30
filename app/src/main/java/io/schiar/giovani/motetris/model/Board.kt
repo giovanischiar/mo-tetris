@@ -88,7 +88,7 @@ class Board(val resolution: Resolution, private val onBoardChangeListener: OnBoa
         var nextY = nextPosition.y
         for (colorBitSet in colorBitSets) {
             if (nextY < 0) continue
-            if (resolution.width < (nextPosition.x + colorBitSet.size)) {
+            if (resolution.width < (nextPosition.x + colorBitSet.length())) {
                 return true
             }
 
