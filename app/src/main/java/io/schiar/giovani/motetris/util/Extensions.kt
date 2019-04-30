@@ -19,6 +19,11 @@ operator fun MutableSet<ColorBit>.set(i: Int, colorBit: ColorBit) {
     this.add(newColorBit)
 }
 
+fun Set<ColorBit>.length(): Int {
+    val colorBitsOrdered = this.map { it.getIndex() }.sorted()
+    return colorBitsOrdered.last() + 1
+}
+
 fun MutableSet<ColorBit>.mergeWithOffset(other: Set<ColorBit>, offset: Int = 0) {
     if (offset < 0) {
         return

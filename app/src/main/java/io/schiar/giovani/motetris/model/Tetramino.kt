@@ -2,6 +2,7 @@ package io.schiar.giovani.motetris.model
 
 import io.schiar.giovani.motetris.model.TetraminoTypes.*
 import io.schiar.giovani.motetris.util.ColorBit
+import io.schiar.giovani.motetris.util.length
 
 class Tetramino(type: TetraminoTypes, private val color: Int) {
 
@@ -22,8 +23,9 @@ class Tetramino(type: TetraminoTypes, private val color: Int) {
     fun width(): Int {
         var width = 0
         for (colorBitSet in shape) {
-            if (colorBitSet.size > width) {
-                width = colorBitSet.size
+            val widthCandidate = colorBitSet.length()
+            if (widthCandidate > width) {
+                width = widthCandidate
             }
         }
         return width
